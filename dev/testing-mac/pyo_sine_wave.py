@@ -4,7 +4,7 @@ import time
 s = Server().boot()
 s.start()
 s.recstart()
-a = Sine(mul=0.1).mix(2).out()
+a = Sine(freq=261, mul=0.1).mix(2).out()
 
 # keep thread alive
 try:
