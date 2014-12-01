@@ -5,9 +5,9 @@ function [ output_args ] = dtft_input_plot(input_arg)
 [xn fs]=wavread(input_arg);
 nf=106000; %number of point in DTFT
 Y1 = fft(xn,nf);
-Y1db = mag2db(Y1);
+Y1db = mag2db(abs(Y1));
 f1 = fs/2*linspace(0,1,nf/2+1);
-plot(f1,abs(Y1db(1:nf/2+1)));
+plot(f1,Y1db(1:nf/2+1));
 
 end
 
