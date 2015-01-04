@@ -1,6 +1,4 @@
-#INTERFACE PROGRAM V0.03
-#Uses phone as interface instead of manual
-#Now takes in a special parameter: debug
+#INCDS main
 
 from pyo import *
 import time
@@ -40,14 +38,21 @@ try:
             #change debug mode to false
             global_var.debug_mode = False
 
-        #set user phase etc (for now auto mode does not work)
+        # Auto mode implemented
+        if global_var.auto_mode == True:
+            #Automode steps:
+            #   1.Accept input from microphone
+            #   2.Run through DFT
+            #   3.Examine output in table format
+            #   4.Take Average
+            #   5.Determine best course of action
+        else:
+            a.setFreq(global_var.user_freq)
+            b.setFreq(global_var.user_freq)
+            user_phase_float = float(global_var.user_phase)/360
 
-        a.setFreq(global_var.user_freq)
-        b.setFreq(global_var.user_freq)
-        user_phase_float = float(global_var.user_phase)/360
-
-        b.setPhase(1 - user_phase_float)
-        #sleep the system for a little bit
+            b.setPhase(1 - user_phase_float)
+            #sleep the system for a little bit
         time.sleep(0.05)
 except KeyboardInterrupt:
     s.stop()
