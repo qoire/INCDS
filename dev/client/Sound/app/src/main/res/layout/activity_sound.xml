@@ -63,37 +63,14 @@
         android:layout_alignRight="@+id/phaseBar"
         android:layout_alignEnd="@+id/phaseBar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AutoMode"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/phaseBar"
-        android:layout_alignEnd="@+id/phaseBar"
-        android:layout_marginRight="99dp"
-        android:layout_marginEnd="99dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/IPText"
-        android:layout_marginTop="39dp"
-        android:text="IP Address"
-        android:width="200dp"
-        android:layout_below="@+id/toggleAuto"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
-        android:id="@+id/Connectbutton"
-        android:layout_alignBottom="@+id/IPText"
-        android:layout_alignLeft="@+id/toggleAuto"
-        android:layout_alignStart="@+id/toggleAuto" />
+        android:text="debug"
+        android:id="@+id/dbgButton"
+        android:layout_below="@+id/toggleAuto"
+        android:layout_alignRight="@+id/phaseBar"
+        android:layout_alignEnd="@+id/phaseBar"
+        android:layout_marginTop="43dp" />
 
 </RelativeLayout>
