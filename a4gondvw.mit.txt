@@ -1,0 +1,70 @@
+﻿Merge remote-tracking branch 'origin/master'
+
+Conflicts:
+	dev/client/Sound/app/app.iml
+	dev/client/Sound/app/src/main/java/com/incds/team/sound/Sound.java
+	dev/client/Sound/app/src/main/res/layout/activity_sound.xml
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 4 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .gitignore
+#	new file:   dev/alex/MATLAB/outputs/concentric.fig
+#	deleted:    dev/client/Sound/.gitignore
+#	deleted:    dev/client/Sound/.idea/.name
+#	deleted:    dev/client/Sound/.idea/compiler.xml
+#	deleted:    dev/client/Sound/.idea/copyright/profiles_settings.xml
+#	deleted:    dev/client/Sound/.idea/encodings.xml
+#	deleted:    dev/client/Sound/.idea/gradle.xml
+#	deleted:    dev/client/Sound/.idea/misc.xml
+#	deleted:    dev/client/Sound/.idea/modules.xml
+#	deleted:    dev/client/Sound/.idea/scopes/scope_settings.xml
+#	deleted:    dev/client/Sound/.idea/vcs.xml
+#	deleted:    dev/client/Sound/Sound.iml
+#	deleted:    dev/client/Sound/app/.gitignore
+#	deleted:    dev/client/Sound/app/app.iml
+#	deleted:    dev/client/Sound/app/build.gradle
+#	deleted:    dev/client/Sound/app/proguard-rules.pro
+#	deleted:    dev/client/Sound/app/src/androidTest/java/com/incds/team/sound/ApplicationTest.java
+#	deleted:    dev/client/Sound/app/src/main/AndroidManifest.xml
+#	deleted:    dev/client/Sound/app/src/main/java/com/incds/team/sound/Sound.java
+#	deleted:    dev/client/Sound/app/src/main/res/drawable-hdpi/ic_launcher.png
+#	deleted:    dev/client/Sound/app/src/main/res/drawable-mdpi/ic_launcher.png
+#	deleted:    dev/client/Sound/app/src/main/res/drawable-xhdpi/ic_launcher.png
+#	deleted:    dev/client/Sound/app/src/main/res/drawable-xxhdpi/ic_launcher.png
+#	deleted:    dev/client/Sound/app/src/main/res/layout/activity_sound.xml
+#	deleted:    dev/client/Sound/app/src/main/res/menu/menu_sound.xml
+#	deleted:    dev/client/Sound/app/src/main/res/values-w820dp/dimens.xml
+#	deleted:    dev/client/Sound/app/src/main/res/values/dimens.xml
+#	deleted:    dev/client/Sound/app/src/main/res/values/strings.xml
+#	deleted:    dev/client/Sound/app/src/main/res/values/styles.xml
+#	deleted:    dev/client/Sound/build.gradle
+#	deleted:    dev/client/Sound/gradle.properties
+#	deleted:    dev/client/Sound/gradle/wrapper/gradle-wrapper.jar
+#	deleted:    dev/client/Sound/gradle/wrapper/gradle-wrapper.properties
+#	deleted:    dev/client/Sound/gradlew
+#	deleted:    dev/client/Sound/gradlew.bat
+#	deleted:    dev/client/Sound/settings.gradle
+#	deleted:    dev/modules/DFT_module.py
+#	new file:   dev/modules/global_var.py
+#	new file:   dev/modules/incds_main.py
+#	deleted:    dev/modules/manual_module.py
+#	new file:   dev/modules/network_handler.py
+#	new file:   dev/taylor-input/output.wav
+#	modified:   dev/testing-mac/server/pyo_client.py
+#	modified:   dev/testing-mac/server/pyo_server.py
+#
+
