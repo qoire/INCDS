@@ -9,6 +9,14 @@ import json
 import network_handler
 import global_var
 
+#static
+_FREQUENCY = 'freq'
+_PHASE = 'phase'
+_AUTO = 'auto'
+_DEBUG = 'debug'
+
+#initialize hash
+
 #MAIN
 s = Server(nchnls=2).boot()
 s.start()
@@ -26,7 +34,9 @@ network_handler.startInterfaceServer(HOST, PORT)
 
 try:
     while True:
-        if global_var.debug_mode == True:
+        in_dict = global_var.network_queue.get()
+
+        if in_dict[_DEBUG] == "True":
             b.setFreq(global_var.user_freq+debug_sine)
             a.mul=0
             time.sleep(5)
@@ -36,24 +46,32 @@ try:
             a.mul=0.3
 
             #change debug mode to false
-            global_var.debug_mode = False
+            in_dict[_DEBUG] = "False"
 
         # Auto mode implemented
-        if global_var.auto_mode == True:
+        if in_dict[_AUTO] == "True":
             #Automode steps:
             #   1.Accept input from microphone
             #   2.Run through DFT
             #   3.Examine output in table format
             #   4.Take Average
             #   5.Determine best course of action
+            
+            hello_world = 1
         else:
-            a.setFreq(global_var.user_freq)
-            b.setFreq(global_var.user_freq)
-            user_phase_float = float(global_var.user_phase)/360
+            # MANUAL MODE
+            #   1. Get instructions from queue
+            #   2. Execute
+            #   3. Tell queue it's done
 
-            b.setPhase(1 - user_phase_float)
-            #sleep the system for a little bit
-        time.sleep(0.05)
+            a.setFreq(in_dict['freq'])
+            b.setFreq(in_dict['freq'])
+            phase_float = float(in_dict['phase'])/360
+
+            b.setPhase(1 - phase_float)
+
+        # finish task
+        global_var.network_queue.task_done()
 except KeyboardInterrupt:
     s.stop()
     

@@ -19,35 +19,45 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
         data = self.rfile.readline().strip()
         cur_thread = threading.current_thread()
 
-        print data
+        # response handling
+        try:
+            client_input = json.loads(data)
 
-        #response handling
-        client_input = json.loads(data)
+            # check that json is correct
+            if not (checkJSONFile(client_input)):
+                client_input = global_var.old_hash
+        except ValueError:
+            print 'Decoding JSON has failed'
+            client_input = global_var.old_hash
 
-        #handling each variable individually
-        global_var.user_phase = client_input['phase']
-        global_var.user_freq = client_input['freq']
-        global_var.auto_mode = client_input['auto']
-
-        if client_input['auto'] == 'True':
-            global_var.auto_mode = True
-        else:
-            global_var.auto_mode = False
-
-        if client_input['debug'] == 'True':
-            global_var.debug_mode = True
 
         response = "ok\n"
         self.request.sendall(response)
+
+        # handling each variable individually
+        global_var.network_queue.put(client_input)
+        global_var.network_queue.join()
+
+        # replace old hash with current hash
+        global_var.old_hash = client_input
+
+    def checkJSONFile(json_file):
+        check_list = ['freq', 'phase', 'auto', 'debug']
+
+        for item in check_list:
+            if item not in json_file:
+                return False
+        return True
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 def startInterfaceServer(HOST, PORT):
-	server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
-	ip, port = server.server_address
-	server_thread = threading.Thread(target=server.serve_forever)
-	server_thread.daemon = True
-	server_thread.start()
+    server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
+    ip, port = server.server_address
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.daemon = True
+    server_thread.start()
+    print "Network thread started"
 
