@@ -10,6 +10,7 @@ import network_handler
 import global_var
 import audio_packager
 import incds_dft
+import incds_mode
 
 #static
 _FREQ = 'freq'
@@ -38,6 +39,9 @@ debug_sine=Sine(freq=5,mul=20)
 HOST, PORT = '', 9999
 network_handler.startInterfaceServer(HOST, PORT)
 
+auto_started = False
+auto_thread = incds_mode.INCDS()
+
 try:
     while True:
         in_dict = global_var.network_queue.get()
@@ -62,21 +66,23 @@ try:
             #   3.Examine output in table format
             #   4.Take Average
             #   5.Determine best course of action
-
-            audio_file = audio_packager.getAudio()
-            incds_dft.biquad_filter(audio_file, in_dict[_FREQ])
-
+            if not auto_started:
+                auto_thread.start()
+                auto_started = True
         else:
             # MANUAL MODE
             #   1. Get instructions from queue
             #   2. Execute
             #   3. Tell queue it's done
 
+            if auto_started:
+                auto_thread.signal = False
+                auto_started = False
+
             a.setFreq(in_dict[_FREQ])
             b.setFreq(in_dict[_FREQ])
             phase_float = float(in_dict[_PHASE])/360
             b.setPhase(1 - phase_float)
-
 
             # set the magnitudes properly
             if in_dict[_MUTE1]:
