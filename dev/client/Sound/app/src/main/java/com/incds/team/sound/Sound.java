@@ -125,7 +125,7 @@ public class Sound extends ActionBarActivity {
 
                     if (addr == "127.0.0.1") {
                         try {
-                            Thread.sleep(50);
+                            Thread.sleep(20);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -144,7 +144,7 @@ public class Sound extends ActionBarActivity {
 
                     //sleep the thread to reduce CPU usage
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(20);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -362,6 +362,7 @@ public class Sound extends ActionBarActivity {
                 dbgMode = SharedData.globalInstance.debug_mode;
 
                 SharedData.globalInstance.debug_mode = 0;
+                SharedData.globalInstance.shutdown = 0;
             }
 
             //assemble JSON object
