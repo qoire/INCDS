@@ -49,13 +49,6 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
         # replace old hash with current hash
         global_var.old_hash = client_input
 
-    def checkJSONFile(json_file):
-        check_list = ['freq', 'phase', 'auto', 'debug', 'mag1', 'mag2', 'mute1', 'mute2', 'shutdown']
-
-        for item in check_list:
-            if item not in json_file:
-                return False
-        return True
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):

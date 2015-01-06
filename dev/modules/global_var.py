@@ -15,4 +15,4 @@ old_hash = {'freq': 261, 'phase': 0, 'auto': 0, 'debug': 0, 'stop': 0, 'mag1': 3
 
 # Queue for communication between audio/DFT threads
 input_queue = Queue.PriorityQueue(maxsize=1)
-network_queue = Queue.PriorityQueue(maxsize=1)
+network_queue = Queue.Queue()

@@ -39,7 +39,7 @@ network_handler.startInterfaceServer(HOST, PORT)
 
 try:
     while True:
-        in_dict = global_var.network_queue.get()
+        in_dict = global_var.network_queue.get(1000)
 
         if in_dict[_DEBUG]:
             b.setFreq(global_var.user_freq+debug_sine)
@@ -87,14 +87,10 @@ try:
                 b.mul = float(in_dict[_MAG2])/1000
 
         if in_dict[_SHUTDOWN]:
-            # SHUTDOWN
-            break
+            raise KeyboardInterrupt
 
         # finish task
-        global_var.network_queue.task_done()
+        #global_var.network_queue.task_done()
 except KeyboardInterrupt:
     s.stop()
-
-s.stop()
-print "Shutting down system"
     
