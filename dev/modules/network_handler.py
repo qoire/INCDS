@@ -19,12 +19,21 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
         data = self.rfile.readline().strip()
         cur_thread = threading.current_thread()
 
+        print data
+
+        correct = True
         # response handling
         try:
             client_input = json.loads(data)
+            check_list = ['freq', 'phase', 'auto', 'debug', 'mag1', 'mag2', 'mute1', 'mute2', 'shutdown']
+
+            for item in check_list:
+                if item not in check_list:
+                    correct = False
+
 
             # check that json is correct
-            if not (checkJSONFile(client_input)):
+            if not (correct):
                 client_input = global_var.old_hash
         except ValueError:
             print 'Decoding JSON has failed'
@@ -36,13 +45,12 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
 
         # handling each variable individually
         global_var.network_queue.put(client_input)
-        global_var.network_queue.join()
 
         # replace old hash with current hash
         global_var.old_hash = client_input
 
     def checkJSONFile(json_file):
-        check_list = ['freq', 'phase', 'auto', 'debug']
+        check_list = ['freq', 'phase', 'auto', 'debug', 'mag1', 'mag2', 'mute1', 'mute2', 'shutdown']
 
         for item in check_list:
             if item not in json_file:
