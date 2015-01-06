@@ -4,6 +4,8 @@ import global_var
 import StringIO
 import threading
 
+from pyo import *
+
 TASK_AUDIO = "AUDIO_INPUT_INIT"
 
 def initAudioThread():
