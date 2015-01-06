@@ -22,14 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/phaseBar"
-        android:layout_marginTop="114dp"
-        android:layout_below="@+id/freqBar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/freqBar"
-        android:layout_alignEnd="@+id/freqBar"
         android:max="360"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:layout_below="@+id/textPhase"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,8 +47,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Phase"
         android:id="@+id/textPhase"
-        android:layout_marginBottom="33dp"
-        android:layout_alignBottom="@+id/phaseBar"
+        android:layout_below="@+id/freqBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -58,23 +56,20 @@
         android:layout_height="wrap_content"
         android:text="debug"
         android:id="@+id/debug_button"
-        android:layout_alignRight="@+id/phaseBar"
-        android:layout_alignEnd="@+id/phaseBar"
-        android:layout_marginTop="37dp"
-        android:layout_below="@+id/phaseBar" />
+        android:layout_above="@+id/btnStop"
+        android:layout_alignRight="@+id/switchAuto"
+        android:layout_alignEnd="@+id/switchAuto" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Auto"
         android:id="@+id/switchAuto"
-        android:layout_below="@+id/debug_button"
-        android:layout_marginTop="41dp"
         android:checked="false"
-        android:layout_alignLeft="@+id/debug_button"
-        android:layout_alignStart="@+id/debug_button"
-        android:layout_alignRight="@+id/phaseBar"
-        android:layout_alignEnd="@+id/phaseBar" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="51dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -86,5 +81,76 @@
         android:layout_toLeftOf="@+id/debug_button"
         android:layout_toStartOf="@+id/debug_button"
         android:text="127.0.0.1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="shutdown"
+        android:id="@+id/btnStop"
+        android:layout_alignBottom="@+id/switchAuto"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Magnitude 1"
+        android:id="@+id/textView"
+        android:layout_below="@+id/phaseBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/m1bar"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/ipAddr"
+        android:layout_alignEnd="@+id/ipAddr"
+        android:indeterminate="false"
+        android:max="1000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Magnitude 2"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/m1bar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/m2bar"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/m1bar"
+        android:layout_alignEnd="@+id/m1bar"
+        android:max="1000"
+        android:indeterminate="false" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/m1Toggle"
+        android:layout_alignBottom="@+id/m1bar"
+        android:layout_toRightOf="@+id/m1bar"
+        android:layout_toEndOf="@+id/m1bar"
+        android:checked="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/m2Toggle"
+        android:layout_alignBottom="@+id/m2bar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:checked="true" />
 
 </RelativeLayout>
