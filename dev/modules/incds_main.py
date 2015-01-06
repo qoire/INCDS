@@ -8,6 +8,8 @@ import SocketServer
 import json
 import network_handler
 import global_var
+import audio_packager
+import incds_dft
 
 #static
 _FREQ = 'freq'
@@ -20,7 +22,6 @@ _MAG2 = 'mag2'
 _MUTE1 = 'mute1'
 _MUTE2 = 'mute2'
 
-#initialize hash
 
 #MAIN
 s = Server(nchnls=2).boot()
@@ -39,7 +40,7 @@ network_handler.startInterfaceServer(HOST, PORT)
 
 try:
     while True:
-        in_dict = global_var.network_queue.get(1000)
+        in_dict = global_var.network_queue.get()
 
         if in_dict[_DEBUG]:
             b.setFreq(global_var.user_freq+debug_sine)
@@ -61,8 +62,10 @@ try:
             #   3.Examine output in table format
             #   4.Take Average
             #   5.Determine best course of action
-            
-            hello_world = 1
+
+            audio_file = audio_packager.getAudio()
+            incds_dft.biquad_filter(audio_file, in_dict[_FREQ])
+
         else:
             # MANUAL MODE
             #   1. Get instructions from queue

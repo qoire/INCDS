@@ -1,2 +1,0 @@
-def network_teardown():
-	
