@@ -9,7 +9,6 @@ import json
 import network_handler
 import global_var
 import audio_packager
-import incds_dft
 import incds_mode
 
 #static
@@ -22,6 +21,9 @@ _MAG1 = 'mag1'
 _MAG2 = 'mag2'
 _MUTE1 = 'mute1'
 _MUTE2 = 'mute2'
+
+#wave location
+WAVE_LOCATION = "./output/temp.wav"
 
 
 #MAIN
@@ -40,7 +42,6 @@ HOST, PORT = '', 9999
 network_handler.startInterfaceServer(HOST, PORT)
 
 auto_started = False
-auto_thread = incds_mode.INCDS()
 
 try:
     while True:
@@ -67,6 +68,7 @@ try:
             #   4.Take Average
             #   5.Determine best course of action
             if not auto_started:
+                auto_thread = incds_mode.INCDS(WAVE_LOCATION, in_dict[_FREQ])
                 auto_thread.start()
                 auto_started = True
         else:
