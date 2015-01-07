@@ -20,7 +20,7 @@ class INCDS(threading.Thread):
             cmd = "python audio_main.py"
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             p.communicate()
-
+            
             #biquad filter
             audio_packager.biquad_filter(self.WAVE_LOCATION, freq)
 

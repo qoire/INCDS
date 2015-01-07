@@ -6,28 +6,6 @@ import threading
 
 from pyo import *
 
-TASK_AUDIO = "AUDIO_INPUT_INIT"
-
-def initAudioThread():
-    # Communicates with main thread using queue
-    audio_thread = threading.Thread(target=audioThread)
-    audio_thread.daemon = True
-    audio_thread.start()
-
-
-def audioThread():
-    while True:
-        # Block until you get a job! saves cpu!
-        task = global_var.input_queue.get()
-
-        if task == TASK_AUDIO:
-            out_file = getAudio()
-
-            # Report back to master thread
-            global_var.input_queue.put(out_file)
-            global_var.input_queue.task_done()
-
-
 def getAudio(WAVE_OUTPUT_FILENAME):
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
