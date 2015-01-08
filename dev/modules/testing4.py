@@ -1,13 +1,22 @@
-# import
+# simulate subprocess audio collection
 
+import audio_packager
+import subprocess
 from pyo import *
 
 WAVE_LOCATION = "./output/temp.wav"
 
-s = Server(nchnls=2).boot()
-tab = SndTable(WAVE_LOCATION)
-s.start()
+s = Server(audio="offline").boot()
 
-print tab.getTable()
+try:
+	while True:
+		# wave audio collection
+		cmd = "python audio_main.py"
+		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+		p.communicate()
 
-time.sleep(1)
+		tab = SndTable(WAVE_LOCATION)
+		s.start()
+		print tab.getTable()
+except KeyboardInterrupt:
+	s.stop()
