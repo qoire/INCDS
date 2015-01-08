@@ -42,11 +42,11 @@ def getAudio(WAVE_OUTPUT_FILENAME):
 def biquad_filter(sound_file, point_freq):
     sf = SfPlayer(sound_file)
     info = sndinfo(sound_file)
-
-    print info
-
     f = Biquadx(sf, freq=point_freq, q=10, type=2, stages=26)
-    print "biquad_filter: Successfully filtered"
+    t = DataTable(info[0], 1)
+    return t
+
+
 
 
 
