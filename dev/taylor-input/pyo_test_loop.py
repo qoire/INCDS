@@ -46,12 +46,12 @@ class amplitudeModule():
     	
         avg = sum(abs(x) for x in peaks)/float(len(peaks))
         print "AVERAGE:", avg
-        self.gotReference = True
         self.referenceAmplitude = avg
+        self.gotReference = True
+        return avg
 
     def amplitudeEqualizer(self):
-        return self.averageAmplitude(self.changeFloatList)
-        # return 0.1
+        return self.averageAmplitude(self.changeFloatList) + 0.1
 
     def printReference(self):
         print self.referenceFloatList
@@ -81,6 +81,7 @@ amp_mod = amplitudeModule()
 
 amp_mod.referenceFloatList = DATA_TABLE.getTable()
 amp_mod.averageAmplitude(DATA_TABLE.getTable())
+# amp_mod.referenceAmplitude = averageAmplitude(DATA_TABLE.getTable())
 # amp_mod.printReference()
 
 #get your initial amplitude here from speaker A
@@ -104,8 +105,8 @@ try:
 
         # d is the delta parameter this is how strict the test is
         if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
-            print "TEST AMPLITUDE", test_amp
-            print "TARGET AMPLITUDE", TARGET_MUL
+            print "TEST AMPLITUDE:", test_amp
+            print "TARGET AMPLITUDE:", TARGET_MUL
             break
         
 except KeyboardInterrupt:
