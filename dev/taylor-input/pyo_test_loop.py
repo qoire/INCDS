@@ -91,11 +91,10 @@ try:
     while True:
         #set new amplitude values for b
         b.mul = test_amp
-        s.start()
         #record new values!
         DATA_TABLE = NewTable(length=0.2,chnls=1)
-        rec = TableRec(b, DATA_TABLE)
-
+        rec = TableRec(b, table=DATA_TABLE, fadetime=0).play()
+        s.start()
         #say we wanted to print the new values!
         amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
         # print our stored list!
