@@ -45,7 +45,7 @@ class amplitudeModule():
                 inc = 0
             ref = i
     	
-        avg = sum(peaks)/float(len(peaks))
+        avg = sum(abs(x) for x in peaks)/float(len(peaks))
         print avg
 
     def amplitudeEqualizer(self):
