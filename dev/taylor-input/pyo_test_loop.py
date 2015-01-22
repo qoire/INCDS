@@ -4,13 +4,40 @@
 # SUBSEQUENT LOOPS = ADJUSTED WAVE (speaker B)
 from pyo import *
 
-def amplitudeAdjustment(data_tab):
-	# your code here!
-	# you can add more inputs as necessary
-	# just make sure you return a new amplitude value
 
-	amp = 0.1
-	return amp
+# Hi Taylor, this is the class you will be using
+# Put everything in here! dont leave variables lying around! (its dangerous)
+class amplitudeModule():
+
+    # see that self? all functions inside classes must pass that self as 
+    # its first parameter.
+
+    def __init__(self):
+        #when you want to add variables that you can use
+        #in all functions in a class
+        #use self.__your_var___ as the definition.
+        #same for functions
+        self.referenceAmplitude = 0
+        self.changeAmplitude = 0
+        self.gotReference = False
+        self.referenceFloatList = 0
+        self.changeFloatList = 0
+
+    def averageAmplitude(self, float_list):
+        #this is your amplitude averager function
+        #the input is a list of floats (DATA_TABLE.getTable() outputs list of floats)
+        pass #delete this when you code this module
+
+    def amplitudeEqualizer(self):
+        #this is your equalizer module
+        #return the next step
+        return 0.1
+
+    def printReference(self):
+        print self.referenceFloatList
+
+    def printChange(self):
+        print self.changeFloatList
 
 OUTPUT_FILE = "./output/output.wav"
 
@@ -27,26 +54,35 @@ rec = TableRec(b, table=DATA_TABLE, fadetime=0).play()
 s.start()
 s.stop()
 
-print DATA_TABLE.getTable()
+# instantiate your amplitudeModule module
+amp_mod = amplitudeModule()
+
+amp_mod.referenceFloatList = DATA_TABLE.getTable()
+amp_mod.printReference()
 
 #get your initial amplitude here from speaker A
 
 test_amp = 0.1
 
 try:
-	while True:
-		#set new amplitude values for b
-		b.mul = test_amp
-		s.start()
-		#record new values!
-		rec = TableRec(b, DATA_TABLE)
-		print DATA_TABLE.getTable()
-		test_amp = amplitudeAdjustment(DATA_TABLE)
+    while True:
+        #set new amplitude values for b
+        b.mul = test_amp
+        s.start()
+        #record new values!
+        rec = TableRec(b, DATA_TABLE)
 
-		# d is the delta parameter this is how strict the test is
-		if (test_amp <= TARGET_MUL + d) or (test_amp >= TARGET_MUL - d):
-			break
-		
+        #say we wantd to print the new values!
+        amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
+        # print our stored list!
+        amp_mod.printChange()
+        #change the amplitude to a new one (adjust)
+        test_amp = amp_mod.amplitudeEqualizer()
+
+        # d is the delta parameter this is how strict the test is
+        if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
+            break
+        
 except KeyboardInterrupt:
-	s.stop()
+    s.stop()
 
