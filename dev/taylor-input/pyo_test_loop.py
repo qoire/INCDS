@@ -4,7 +4,6 @@
 # SUBSEQUENT LOOPS = ADJUSTED WAVE (speaker B)
 from pyo import *
 
-
 # Hi Taylor, this is the class you will be using
 # Put everything in here! dont leave variables lying around! (its dangerous)
 class amplitudeModule():
@@ -29,28 +28,27 @@ class amplitudeModule():
 
         ref = 0
         inc = 1
-        index = 1
+        index = 0
         peaks = []
 
         for i in float_list:
             if (i>ref):
                 if (inc == 0):
-                    peaks[index] = ref
+                    peaks.insert(index,ref)
                     index = index+1
                 inc = 1
             elif (i<ref):
                 if (inc == 1):
-                    peaks[index] = ref
+                    peaks.insert(index,ref)
                     index = index+1
                 inc = 0
             ref = i
     	
         avg = sum(abs(x) for x in peaks)/float(len(peaks))
-        print avg
+        print "AVERAGE:", avg
+        return avg
 
     def amplitudeEqualizer(self):
-        #this is your equalizer module
-        #return the next step
         return 0.1
 
     def printReference(self):
@@ -60,12 +58,14 @@ class amplitudeModule():
         print self.changeFloatList
 
 OUTPUT_FILE = "./output/output.wav"
+##fake_file = StringIO.StringIO()
 
 TARGET_MUL = 0.5
 d = 0.01
 
 s = Server(audio="offline").boot()
 s.recordOptions(dur=0.2, filename=OUTPUT_FILE)
+s.setVerbosity(1)
 b = Sine(freq=450, mul=TARGET_MUL).out()
 
 #DATA_TABLE
@@ -78,7 +78,7 @@ s.stop()
 amp_mod = amplitudeModule()
 
 amp_mod.referenceFloatList = DATA_TABLE.getTable()
-amp_mode.averageAmplitude(DATA_TABLE.getTable())
+# amp_mod.averageAmplitude(DATA_TABLE.getTable())
 # amp_mod.printReference()
 
 #get your initial amplitude here from speaker A
@@ -98,10 +98,13 @@ try:
         # print our stored list!
         # amp_mod.printChange()
         #change the amplitude to a new one (adjust)
-        test_amp = amp_mod.amplitudeEqualizer()
+        #test_amp = amp_mod.amplitudeEqualizer()
+        test_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
 
         # d is the delta parameter this is how strict the test is
         if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
+            print "TEST AMPLITUDE:", test_amp
+            print "TARGET AMPLITUDE:", TARGET_MUL
             break
         
 except KeyboardInterrupt:
