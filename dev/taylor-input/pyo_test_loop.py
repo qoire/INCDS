@@ -24,29 +24,29 @@ class amplitudeModule():
         self.changeFloatList = 0
 
     def averageAmplitude(self, float_list):
-    	ref = 0
-		inc = 1
-		index = 1
-		peaks = 0
-
-		for i in float_list
-			if float_list[i]>ref
-				if inc == 0
-					peaks[index] = ref
-					index = index+1
-				inc = 1
-			elif float_list[i]<ref
-				if inc == 1
-					peaks[index] = ref
-					index = index+1
-				inc = 0
-			ref = float_list[i]
-    	
-    	avg = sum(peaks)/float(len(peaks))
-    	
-        #this is your amplitude averager function
+    	#this is your amplitude averager function
         #the input is a list of floats (DATA_TABLE.getTable() outputs list of floats)
-        pass #delete this when you code this module
+
+        ref = 0
+        inc = 1
+        index = 1
+        peaks = []
+
+        for i in float_list:
+            if (i>ref):
+                if (inc == 0):
+                    peaks[index] = ref
+                    index = index+1
+                inc = 1
+            elif (i<ref):
+                if (inc == 1):
+                    peaks[index] = ref
+                    index = index+1
+                inc = 0
+            ref = i
+    	
+        avg = sum(peaks)/float(len(peaks))
+        print avg
 
     def amplitudeEqualizer(self):
         #this is your equalizer module
@@ -78,7 +78,8 @@ s.stop()
 amp_mod = amplitudeModule()
 
 amp_mod.referenceFloatList = DATA_TABLE.getTable()
-amp_mod.printReference()
+amp_mode.averageAmplitude(DATA_TABLE.getTable())
+# amp_mod.printReference()
 
 #get your initial amplitude here from speaker A
 
@@ -95,7 +96,7 @@ try:
         #say we wantd to print the new values!
         amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
         # print our stored list!
-        amp_mod.printChange()
+        # amp_mod.printChange()
         #change the amplitude to a new one (adjust)
         test_amp = amp_mod.amplitudeEqualizer()
 
