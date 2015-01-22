@@ -46,10 +46,12 @@ class amplitudeModule():
     	
         avg = sum(abs(x) for x in peaks)/float(len(peaks))
         print "AVERAGE:", avg
-        return avg
+        self.gotReference = True
+        self.referenceAmplitude = avg
 
     def amplitudeEqualizer(self):
-        return 0.1
+        return self.averageAmplitude(self.changeFloatList)
+        # return 0.1
 
     def printReference(self):
         print self.referenceFloatList
@@ -78,7 +80,7 @@ s.stop()
 amp_mod = amplitudeModule()
 
 amp_mod.referenceFloatList = DATA_TABLE.getTable()
-# amp_mod.averageAmplitude(DATA_TABLE.getTable())
+amp_mod.averageAmplitude(DATA_TABLE.getTable())
 # amp_mod.printReference()
 
 #get your initial amplitude here from speaker A
@@ -91,20 +93,20 @@ try:
         b.mul = test_amp
         s.start()
         #record new values!
+        DATA_TABLE = NewTable(length=0.2,chnls=1)
         rec = TableRec(b, DATA_TABLE)
 
-        #say we wantd to print the new values!
+        #say we wanted to print the new values!
         amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
         # print our stored list!
         # amp_mod.printChange()
         #change the amplitude to a new one (adjust)
-        #test_amp = amp_mod.amplitudeEqualizer()
-        test_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+        test_amp = amp_mod.amplitudeEqualizer()
 
         # d is the delta parameter this is how strict the test is
         if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
-            print "TEST AMPLITUDE:", test_amp
-            print "TARGET AMPLITUDE:", TARGET_MUL
+            print "TEST AMPLITUDE", test_amp
+            print "TARGET AMPLITUDE", TARGET_MUL
             break
         
 except KeyboardInterrupt:
