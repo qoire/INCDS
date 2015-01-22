@@ -2,7 +2,11 @@
 
 import pyaudio
 import wave
+"<<<<<<< Updated upstream"
 import StringIO
+"======="
+import os
+">>>>>>> Stashed changes"
 
 CHUNK = 512
 FORMAT = pyaudio.paInt16
@@ -33,7 +37,8 @@ stream.stop_stream()
 stream.close()
 p.terminate()
 
-wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+completeName = os.path.abspath("../%s" % WAVE_OUTPUT_FILENAME)
+wf = wave.open(completeName, 'wb')
 wf.setnchannels(CHANNELS)
 wf.setsampwidth(p.get_sample_size(FORMAT))
 wf.setframerate(RATE)
