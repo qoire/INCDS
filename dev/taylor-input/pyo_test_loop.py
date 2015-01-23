@@ -26,32 +26,38 @@ class amplitudeModule():
     	#this is your amplitude averager function
         #the input is a list of floats (DATA_TABLE.getTable() outputs list of floats)
 
-        ref = 0
-        inc = 1
-        index = 0
-        peaks = []
+        ref = 0  	#starting with reference of 0
+        inc = 1  	#when inc=1 --> increasing, when inc=0 --> decreasing
+        index = 0  	#indexes the peaks array
+        peaks = []  #max/min amplitudes
 
-        for i in float_list:
-            if (i>ref):
-                if (inc == 0):
-                    peaks.insert(index,ref)
-                    index = index+1
-                inc = 1
-            elif (i<ref):
+        for i in float_list: 				#cycle through the amplitude values
+            if (i>ref): 					#if the value is bigger than the one before it, it's increasing
+                if (inc == 0): 				#but if it was previously decreasing, we know there's a minimum
+                    peaks.insert(index,ref) #store the peak value
+                    index = index+1 		#and increase the index
+                inc = 1 					#we know we're increasing now
+            elif (i<ref): 					#same idea as before but opposite for maximum values
                 if (inc == 1):
                     peaks.insert(index,ref)
                     index = index+1
                 inc = 0
-            ref = i
+            ref = i 		#update the reference to the previous value
     	
-        avg = sum(abs(x) for x in peaks)/float(len(peaks))
-        print "AVERAGE:", avg
-        self.referenceAmplitude = avg
-        self.gotReference = True
+        avg = sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
+        #print "AVERAGE:", avg
+        if not self.gotReference:
+            self.referenceAmplitude = avg 					#store the reference
+            self.gotReference = True
+            print "REFERENCE:", self.referenceAmplitude
         return avg
 
     def amplitudeEqualizer(self):
-        return self.averageAmplitude(self.changeFloatList) + 0.1
+        newavg = self.averageAmplitude(self.changeFloatList)
+        if newavg < self.referenceAmplitude: 	#if the speaker volume needs to be increased
+        	return (newavg + d)					#'d' is the delta value threshold define below
+        elif newavg > self.referenceAmplitude: 	#if the speaker volume needs to be decreased
+            return (newavg - d)
 
     def printReference(self):
         print self.referenceFloatList
@@ -62,8 +68,8 @@ class amplitudeModule():
 OUTPUT_FILE = "./output/output.wav"
 ##fake_file = StringIO.StringIO()
 
-TARGET_MUL = 0.5
-d = 0.01
+TARGET_MUL = 0.33
+d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
 s = Server(audio="offline").boot()
 s.recordOptions(dur=0.2, filename=OUTPUT_FILE)
@@ -86,7 +92,7 @@ amp_mod.averageAmplitude(DATA_TABLE.getTable())
 
 #get your initial amplitude here from speaker A
 
-test_amp = 0.1
+test_amp = 0.98
 
 try:
     while True:
@@ -104,8 +110,9 @@ try:
         test_amp = amp_mod.amplitudeEqualizer()
 
         # d is the delta parameter this is how strict the test is
+        #if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
         if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
-            print "TEST AMPLITUDE:", test_amp
+            print "FINAL ACHIEVED AMPLITUDE:", test_amp
             print "TARGET AMPLITUDE:", TARGET_MUL
             break
         
