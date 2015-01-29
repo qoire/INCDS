@@ -1,16 +1,25 @@
 from pyo import *
 
+s = Server(nchnls=2, duplex=1).boot()
+s.setVerbosity(1)
+a = Sine(freq=450, mul=0.8)
+b = Sine(freq=450, mul=0)
 
-pa_list_devices()
-print "Default input:", pa_get_default_input()
-s = Server(duplex=1).boot()
+p = Pan(a, outs=2, pan=1, spread=0).out()
+p2 = Pan(b, outs=2, pan=0, spread=0).out()
+
+#setup input
+inp = Input(chnl=0, mul=1)
+
+#DATA_TABLE
+data_table = NewTable(length=0.2,chnls=1)
+rec = TableRec(inp, data_table, fadetime=0).play()
 s.start()
-
-inp = Input(chnl=0, mul=1) # chnl=[0,1] for stereo input
-indel = Delay(inp, delay=.25, feedback=0.5).out()
 
 try:
 	while True:
-		pass
+		time.sleep(1)
+		print rec['trig']
+		#print data_table.getTable()
 except KeyboardInterrupt:
 	s.stop()
