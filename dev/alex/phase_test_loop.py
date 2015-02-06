@@ -19,41 +19,47 @@ class phaseModule():
     def phaseChange(self, cur_mag):
 
         #main function that will contain the phase change algorithm
-		
- min=sinfunc(0)#call taylor's function
- cursor=sinfunc(15)
- increment=30
- if cursor>min:
-  buff=-10
-  cursor=sinfunc(buff)
-  isdecre=true
-  while increment > 0.1:
-   while cursor<=min:
-    min=cursor
-    if isdecre==1:
-     buff=buff-increment
-    else:
-     buff=buff+increment
-    cursor=sinfunc(buff)#call taylor's function
-   min=cursor
-   increment=increment/2
-   isdecre=not(isdecre)
- else
-  buff=10
-  cursor=sinfunc(buff)
-  isdecre=false
-  while increment > 0.1:
-   while cursor<=min:
-    min=cursor
-    if isdecre==1:
-     buff=buff-increment
-    else:
-     buff=buff+increment
-    cursor=sinfunc(buff)#call taylor's function
-   min=cursor
-   increment=increment/2
-   isdecre=not(isdecre)
-		
+
+        min=sinfunc(0)#call taylor's function
+        cursor=sinfunc(15)
+        increment=30
+
+        if cursor>min:
+            buff=-10
+            cursor=sinfunc(buff)
+            isdecre=true
+
+            while increment > 0.1:
+                while cursor<=min:
+                    min=cursor
+                    if isdecre==1:
+                        buff=buff-increment
+                    else:
+                        buff=buff+increment
+
+                    cursor=sinfunc(buff)#call taylor's function
+
+            min=cursor
+            increment=increment/2
+            isdecre=not(isdecre)
+        else:
+            buff=10
+            cursor=sinfunc(buff)
+            isdecre=false
+            while increment > 0.1:
+                while cursor<=min:
+                    min=cursor
+                    if isdecre==1:
+                        buff=buff-increment
+                    else:
+                        buff=buff+increment
+                    
+                    cursor=sinfunc(buff)#call taylor's function
+
+                min=cursor
+                increment=increment/2
+                isdecre=not(isdecre)
+
         next_phase = 0
         return next_phase
 
