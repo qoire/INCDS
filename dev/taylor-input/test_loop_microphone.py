@@ -72,15 +72,15 @@ class amplitudeModule():
         print self.changeFloatList
 
 TARGET_MUL = 0.6
-d = 0.01 	#program doesn't seem to work if this delta is <0.01
+d = 0.001 	#program doesn't seem to work if this delta is <0.01
 
 s = Server(nchnls=2, duplex=1).boot()
 s.setVerbosity(1)
-########a = Sine(freq=450, mul=TARGET_MUL)
-########b = Sine(freq=450, mul=0)
+a = Sine(freq=450, mul=TARGET_MUL)
+b = Sine(freq=450, mul=0)
 
-########p = Pan(a, outs=2, pan=1, spread=0).out()
-########p2 = Pan(b, outs=2, pan=0, spread=0).out()
+p = Pan(a, outs=2, pan=1, spread=0).out()
+p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
 #setup input
 inp = Input(chnl=0, mul=1)
@@ -99,14 +99,14 @@ amp_mod.averageAmplitude(DATA_TABLE.getTable())
 print 
 
 #open up speaker B close speaker A
-########a.mul = 0
+a.mul = 0
 
 test_amp = 1
 
 try:
     while True:
         #set new amplitude values for b
-        ########b.mul = test_amp
+        b.mul = test_amp
         #record new values!
         DATA_TABLE = NewTable(length=0.1,chnls=1)
         rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
