@@ -52,7 +52,7 @@ class amplitudeModule():
         if not self.gotReference:
             self.referenceAmplitude = avg 					#store the reference
             self.gotReference = True
-            print "REFERENCE:", self.referenceAmplitude
+            print "AMPLITUDE:", self.referenceAmplitude
         return avg
 
     def amplitudeEqualizer(self):
@@ -76,54 +76,26 @@ d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
 s = Server(nchnls=2, duplex=1).boot()
 s.setVerbosity(1)
-########a = Sine(freq=450, mul=TARGET_MUL)
-########b = Sine(freq=450, mul=0)
-
-########p = Pan(a, outs=2, pan=1, spread=0).out()
-########p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
 #setup input
 inp = Input(chnl=0, mul=1)
 s.start()
 #DATA_TABLE
-DATA_TABLE = NewTable(length=0.1,chnls=1)
-rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
-
-time.sleep(0.11) #sleep for a little bit to wait for table
-
-# instantiate your amplitudeModule module
-amp_mod = amplitudeModule()
-
-amp_mod.referenceFloatList = DATA_TABLE.getTable()
-amp_mod.averageAmplitude(DATA_TABLE.getTable())
-print 
-
-#open up speaker B close speaker A
-########a.mul = 0
-
-test_amp = 1
 
 try:
     while True:
-        #set new amplitude values for b
-        ########b.mul = test_amp
-        #record new values!
         DATA_TABLE = NewTable(length=0.1,chnls=1)
         rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
-        time.sleep(0.11)
-        #say we wanted to print the new values!
-        amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
-        # print our stored list!
-        # amp_mod.printChange()
-        #change the amplitude to a new one (adjust)
-        test_amp = amp_mod.amplitudeEqualizer()
+        time.sleep(0.11) #sleep for a little bit to wait for table
+        # instantiate your amplitudeModule module
+        amp_mod = amplitudeModule()
 
-        # d is the delta parameter this is how strict the test is
-        #if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
-        if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
-            print "FINAL ACHIEVED AMPLITUDE:", amp_mod.changeAmplitude
-            print "TARGET AMPLITUDE:", amp_mod.referenceAmplitude
-            break
+        amp_mod.referenceFloatList = DATA_TABLE.getTable()
+        amp_mod.averageAmplitude(DATA_TABLE.getTable())
+        
+        time.sleep(2)
+        
 except KeyboardInterrupt:
     s.stop()
+
 
