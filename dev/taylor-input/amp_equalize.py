@@ -2,7 +2,9 @@
 
 # FIRST LOOP = REFERENCE SINE WAVE (speaker A)
 # SUBSEQUENT LOOPS = ADJUSTED WAVE (speaker B)
+
 from pyo import *
+
 
 # Hi Taylor, this is the class you will be using
 # Put everything in here! dont leave variables lying around! (its dangerous)
@@ -44,8 +46,8 @@ class amplitudeModule():
                 inc = 0
             ref = i 		#update the reference to the previous value
     	
-        avg = sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
-        #print "AVERAGE:", avg
+        avg = 10*sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
+        print "AVERAGE:", avg
         if not self.gotReference:
             self.referenceAmplitude = avg 					#store the reference
             self.gotReference = True
@@ -65,43 +67,48 @@ class amplitudeModule():
     def printChange(self):
         print self.changeFloatList
 
-OUTPUT_FILE = "./output/output.wav"
-##fake_file = StringIO.StringIO()
+TARGET_MUL = 0.9
+TEST_MUL = 0.6
 
-TARGET_MUL = 0.59
 d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
-s = Server(audio="offline").boot()
-s.recordOptions(dur=0.2, filename=OUTPUT_FILE)
-s.setVerbosity(1)
-b = Sine(freq=450, mul=TARGET_MUL).out()
+s = Server(nchnls=2, duplex=1).boot()
+a = Sine(freq=450, mul=TARGET_MUL) #target amplitude (reference) will not change
+b = Sine(freq=450, mul=TEST_MUL)
+p = Pan(a, outs=2, pan=1, spread=0).out() #start both speakers
+p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
-#DATA_TABLE
-DATA_TABLE = NewTable(length=0.2,chnls=1)
-rec = TableRec(b, table=DATA_TABLE, fadetime=0).play()
+s.setVerbosity(1)
+inp = Input(chnl=0, mul=1)
 s.start()
-s.stop()
+
+##########get the reference amplitude
+b.mul = 0 #turn off this speaker leaving just the reference one on
+time.sleep(1) 
+
+DATA_TABLE = NewTable(length=0.1,chnls=1)
+rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
+time.sleep(0.11) #sleep for a little bit to wait for table
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()
-
 amp_mod.referenceFloatList = DATA_TABLE.getTable()
 amp_mod.averageAmplitude(DATA_TABLE.getTable())
-# amp_mod.referenceAmplitude = averageAmplitude(DATA_TABLE.getTable())
-# amp_mod.printReference()
+#reference amplitude is now stored
 
-#get your initial amplitude here from speaker A
+##########get the starting amplitude of the second speaker
+a.mul = 0 #turn the reference speaker off
+b.mul = TEST_MUL
 
-test_amp = 0.01
-
+#enter loop to equalize the amplitudes
 try:
     while True:
         #set new amplitude values for b
-        b.mul = test_amp
+        time.sleep(1)
         #record new values!
-        DATA_TABLE = NewTable(length=0.2,chnls=1)
-        rec = TableRec(b, table=DATA_TABLE, fadetime=0).play()
-        s.start()
+        DATA_TABLE = NewTable(length=0.1,chnls=1)
+        rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
+        time.sleep(0.11)
         #say we wanted to print the new values!
         amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
         # print our stored list!
@@ -115,6 +122,8 @@ try:
             print "FINAL ACHIEVED AMPLITUDE:", test_amp
             print "TARGET AMPLITUDE:", TARGET_MUL
             break
+            
+        b.mul = test_amp
         
 except KeyboardInterrupt:
     s.stop()
