@@ -23,6 +23,7 @@ class amplitudeModule():
         self.gotReference = False
         self.referenceFloatList = 0
         self.changeFloatList = 0
+        self.speakerB = TEST_MUL
 
     def averageAmplitude(self, float_list):
     	#this is your amplitude averager function
@@ -46,7 +47,11 @@ class amplitudeModule():
                 inc = 0
             ref = i 		#update the reference to the previous value
     	
-        avg = 10*sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
+    	if (len(peaks)==0):
+    	    avg = 0
+        else:
+            avg = 10*sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
+            
         print "AVERAGE:", avg
         if not self.gotReference:
             self.referenceAmplitude = avg 					#store the reference
@@ -57,9 +62,11 @@ class amplitudeModule():
     def amplitudeEqualizer(self):
         newavg = self.averageAmplitude(self.changeFloatList)
         if newavg < self.referenceAmplitude: 	#if the speaker volume needs to be increased
-        	return (newavg + d)					#'d' is the delta value threshold define below
+            self.speakerB = self.speakerB + d
+            return self.speakerB				#'d' is the delta value threshold define below
         elif newavg > self.referenceAmplitude: 	#if the speaker volume needs to be decreased
-            return (newavg - d)
+            self.speakerB = self.speakerB - d
+            return self.speakerB
 
     def printReference(self):
         print self.referenceFloatList
@@ -68,7 +75,7 @@ class amplitudeModule():
         print self.changeFloatList
 
 TARGET_MUL = 0.9
-TEST_MUL = 0.6
+TEST_MUL = 0.3
 
 d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
@@ -92,7 +99,6 @@ time.sleep(0.11) #sleep for a little bit to wait for table
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()
-amp_mod.referenceFloatList = DATA_TABLE.getTable()
 amp_mod.averageAmplitude(DATA_TABLE.getTable())
 #reference amplitude is now stored
 
@@ -118,11 +124,10 @@ try:
 
         # d is the delta parameter this is how strict the test is
         #if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
-        if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
+        if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
             print "FINAL ACHIEVED AMPLITUDE:", test_amp
-            print "TARGET AMPLITUDE:", TARGET_MUL
-            break
-            
+            print "TARGET AMPLITUDE:", amp_mod.referenceAmplitude
+            break       
         b.mul = test_amp
         
 except KeyboardInterrupt:

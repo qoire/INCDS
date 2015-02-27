@@ -13,7 +13,7 @@ p2 = Pan(b, outs=2, pan=0, spread=0).out()
 try:
     while True:
         user_phase = raw_input('Enter a new phase value: ')
-        if user_phase < 0 || user_phase > 0:
+        if user_phase < 0 | user_phase > 0:
         	print "please enter a phase within the correct range!"
         else:
         	new_phase = 1 - user_phase
