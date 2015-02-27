@@ -88,7 +88,7 @@ while True:
 	nx_phase = ph.phaseChange(mag)
 	print "Magnitude:" + str(mag) + " Next Phase:" + str(nx_phase) + " Target mag:" + str(min_val)
 	time.sleep(0.2)
-	if i>40:
+	if i>15:
 		break
 	else:
 		i=i+1
