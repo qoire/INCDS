@@ -184,6 +184,6 @@ try:
         else:
             next_phase = 0
         #print "Magnitude:" + str(mag) + " Next Phase:" + str(next_phase)
-        time.sleep(0.5)
+        time.sleep(0.2)
 except KeyboardInterrupt:
     s.stop()

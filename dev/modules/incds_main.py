@@ -27,7 +27,7 @@ WAVE_LOCATION = "./output/temp.wav"
 
 
 #MAIN
-s = Server(nchnls=2, Duplex=1).boot()
+s = Server(nchnls=2).boot()
 s.start()
 a = Sine(freq=261, mul=0.5)
 b = Sine(freq=261, mul=0)
