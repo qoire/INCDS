@@ -91,11 +91,18 @@ s.start()
 
 ##########get the reference amplitude
 b.mul = 0 #turn off this speaker leaving just the reference one on
-time.sleep(1) 
+time.sleep(1)
+
+prntfile = open('output.txt', 'w')
 
 DATA_TABLE = NewTable(length=0.1,chnls=1)
 rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
 time.sleep(0.11) #sleep for a little bit to wait for table
+
+for i in DATA_TABLE.getTable():
+     prntfile.write(str(i)+'\n')
+     
+prntfile.close()
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()

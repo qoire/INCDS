@@ -92,6 +92,9 @@ amp_mod.averageAmplitude(DATA_TABLE.getTable())
 
 #get your initial amplitude here from speaker A
 
+prntfile = open('ideal_output.txt', 'w')
+prntfile.write(str(TARGET_MUL)+'\n')
+
 test_amp = 0.01
 
 try:
@@ -108,13 +111,16 @@ try:
         # amp_mod.printChange()
         #change the amplitude to a new one (adjust)
         test_amp = amp_mod.amplitudeEqualizer()
+        prntfile.write(str(test_amp)+'\n')
 
         # d is the delta parameter this is how strict the test is
         #if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
         if (test_amp <= TARGET_MUL + d) and (test_amp >= TARGET_MUL - d):
             print "FINAL ACHIEVED AMPLITUDE:", test_amp
             print "TARGET AMPLITUDE:", TARGET_MUL
+            prntfile.close()
             break
         
 except KeyboardInterrupt:
+    prntfile.close()
     s.stop()
