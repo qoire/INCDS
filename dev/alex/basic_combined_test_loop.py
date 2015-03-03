@@ -145,21 +145,21 @@ s.stop()
 
 ref_dat = DATA_TABLE.getTable()
 
-# instantiate your amplitudeModule module & phase changer module
-amp_mod = amplitudeModule()
-phase_mod = phaseModule()
 
+#[sum(x) for x in zip(DATA_TABLE.getTable(), VAR_TABLE.getTable())]
+
+# instantiate your amplitudeModule module
+amp_mod = amplitudeModule()
 
 #create new text file
 with open('./out/phase_change.txt', 'w') as f:
     f.write('OUTPUT\n')
 
-iterations = 0
 next_phase = 0 #initially set to 0
 try:
     while True:
         #setup phase change for each loop
-        change_signal.setPhase(float(next_phase))
+        change_signal.setPhase(float(next_phase)/float(360))
         VAR_TABLE = NewTable(length=0.2, chnls=1)
         rec = TableRec(change_signal, table=VAR_TABLE, fadetime=0).play()
         s.start()
@@ -169,18 +169,20 @@ try:
         #print VAR_TABLE.getTable()
 
         mag = amp_mod.averageAmplitude(t.getTable())
-        print "magnitude: " + str(mag) + " next_phase:" + str(next_phase)
-
-        #feed magnitude into phase
-        next_phase = phase_mod.phaseChange(mag)
+        print mag
 
         with open('./out/phase_change.txt', 'ab') as f:
             f.write(str(mag) + '\n')
 
-
-        if iterations > 200: #set iteration cap
+        if next_phase == 360:
+            #exit loop we are done
             break
 
+        #hardlimit the phase
+        if next_phase < 360:
+            next_phase = next_phase+1
+        else:
+            next_phase = 0
         #print "Magnitude:" + str(mag) + " Next Phase:" + str(next_phase)
         time.sleep(0.2)
 except KeyboardInterrupt:
