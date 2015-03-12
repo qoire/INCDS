@@ -8,7 +8,6 @@ import SocketServer
 import json
 import network_handler
 import global_var
-import audio_packager
 import incds_mode
 
 #static
@@ -22,12 +21,13 @@ _MAG2 = 'mag2'
 _MUTE1 = 'mute1'
 _MUTE2 = 'mute2'
 
-#wave location
+# wave location
 WAVE_LOCATION = "./output/temp.wav"
 
+# create new functions to detect devices
 
 #MAIN
-s = Server(nchnls=2).boot()
+s = Server(nchnls=2, duplex=1).boot()
 s.start()
 a = Sine(freq=261, mul=0.5)
 b = Sine(freq=261, mul=0)
