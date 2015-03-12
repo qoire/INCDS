@@ -74,13 +74,16 @@ class amplitudeModule():
 TARGET_MUL = 0.6
 d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
-s = Server(nchnls=2, duplex=1).boot()
+s = Server(nchnls=2, duplex=1)
+s.setInputDevice(3)
+s.setOutputDevice(1)
+s.boot()
 s.setVerbosity(1)
-########a = Sine(freq=450, mul=TARGET_MUL)
-########b = Sine(freq=450, mul=0)
+a = Sine(freq=450, mul=TARGET_MUL)
+b = Sine(freq=450, mul=0)
 
-########p = Pan(a, outs=2, pan=1, spread=0).out()
-########p2 = Pan(b, outs=2, pan=0, spread=0).out()
+p = Pan(a, outs=2, pan=1, spread=0).out()
+p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
 #setup input
 inp = Input(chnl=0, mul=1)
@@ -89,7 +92,7 @@ s.start()
 DATA_TABLE = NewTable(length=0.1,chnls=1)
 rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
 
-time.sleep(0.11) #sleep for a little bit to wait for table
+time.sleep(0.15) #sleep for a little bit to wait for table
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()

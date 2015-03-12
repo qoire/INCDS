@@ -10,7 +10,7 @@ s.setOutputDevice(1)
 s.boot()
 s.start()
 a = Input(chnl=0, mul=.7)
-b = Delay(a, delay=.25, feedback=.5, mul=.5).out()
+b = Delay(a, delay=.25, feedback=.5, mul=.5).mix(2).out()
 
 try:
 	while True:

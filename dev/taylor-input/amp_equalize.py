@@ -24,6 +24,7 @@ class amplitudeModule():
         self.referenceFloatList = 0
         self.changeFloatList = 0
         self.speakerB = TEST_MUL
+        self.newavg = 0
 
     def averageAmplitude(self, float_list):
     	#this is your amplitude averager function
@@ -60,11 +61,11 @@ class amplitudeModule():
         return avg
 
     def amplitudeEqualizer(self):
-        newavg = self.averageAmplitude(self.changeFloatList)
-        if newavg < self.referenceAmplitude: 	#if the speaker volume needs to be increased
+        self.newavg = self.averageAmplitude(self.changeFloatList)
+        if self.newavg < self.referenceAmplitude: 		#if the speaker volume needs to be increased
             self.speakerB = self.speakerB + d
-            return self.speakerB				#'d' is the delta value threshold define below
-        elif newavg > self.referenceAmplitude: 	#if the speaker volume needs to be decreased
+            return self.speakerB						#'d' is the delta value threshold define below
+        elif self.newavg > self.referenceAmplitude: 	#if the speaker volume needs to be decreased
             self.speakerB = self.speakerB - d
             return self.speakerB
 
@@ -74,12 +75,15 @@ class amplitudeModule():
     def printChange(self):
         print self.changeFloatList
 
-TARGET_MUL = 0.9
+TARGET_MUL = 0.5
 TEST_MUL = 0.3
 
 d = 0.01 	#program doesn't seem to work if this delta is <0.01
 
-s = Server(nchnls=2, duplex=1).boot()
+s = Server(nchnls=2, duplex=1)
+s.setInputDevice(3)
+s.setOutputDevice(1)
+s.boot()
 a = Sine(freq=450, mul=TARGET_MUL) #target amplitude (reference) will not change
 b = Sine(freq=450, mul=TEST_MUL)
 p = Pan(a, outs=2, pan=1, spread=0).out() #start both speakers
@@ -93,20 +97,22 @@ s.start()
 b.mul = 0 #turn off this speaker leaving just the reference one on
 time.sleep(1)
 
-prntfile = open('output.txt', 'w')
+##TRY SETTING FOR() LOOP HERE TO GET REFERENCE AMPLITUDE
+prntfile = open('equalize.txt', 'w')
 
+time.sleep(5)
+    
 DATA_TABLE = NewTable(length=0.1,chnls=1)
 rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
-time.sleep(0.11) #sleep for a little bit to wait for table
-
-for i in DATA_TABLE.getTable():
-     prntfile.write(str(i)+'\n')
-     
-prntfile.close()
+time.sleep(0.11)
+#for i in DATA_TABLE.getTable():
+#     prntfile.write(str(i)+'\n')
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()
 amp_mod.averageAmplitude(DATA_TABLE.getTable())
+prntfile.write(str(amp_mod.referenceAmplitude)+'\n')
+
 #reference amplitude is now stored
 
 ##########get the starting amplitude of the second speaker
@@ -117,11 +123,15 @@ b.mul = TEST_MUL
 try:
     while True:
         #set new amplitude values for b
-        time.sleep(1)
+        time.sleep(0.3)
         #record new values!
         DATA_TABLE = NewTable(length=0.1,chnls=1)
         rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
         time.sleep(0.11)
+        
+        for i in DATA_TABLE.getTable():
+             prntfile.write(str(10*i)+'\n')
+
         #say we wanted to print the new values!
         amp_mod.changeFloatList = DATA_TABLE.getTable() #store the list!
         # print our stored list!
@@ -130,12 +140,12 @@ try:
         test_amp = amp_mod.amplitudeEqualizer()
 
         # d is the delta parameter this is how strict the test is
-        #if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
-        if (test_amp <= amp_mod.referenceAmplitude + d) and (test_amp >= amp_mod.referenceAmplitude - d):
-            print "FINAL ACHIEVED AMPLITUDE:", test_amp
+        if (amp_mod.newavg <= amp_mod.referenceAmplitude + d) and (amp_mod.newavg >= amp_mod.referenceAmplitude - d):
+            print "FINAL ACHIEVED AMPLITUDE:", amp_mod.newavg
             print "TARGET AMPLITUDE:", amp_mod.referenceAmplitude
             break       
         b.mul = test_amp
         
 except KeyboardInterrupt:
+    prntfile.close()
     s.stop()

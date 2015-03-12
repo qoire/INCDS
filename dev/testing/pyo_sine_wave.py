@@ -1,9 +1,11 @@
 from pyo import *
 import time
 
-s = Server().boot()
+s = Server(nchnls=2, duplex=1)
+s.setInputDevice(4)
+s.setOutputDevice(2)
+s.boot()
 s.start()
-s.recstart()
 a = Sine(mul=0.01).mix(2).out()
 
 # keep thread alive

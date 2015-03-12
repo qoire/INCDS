@@ -46,7 +46,11 @@ class amplitudeModule():
                 inc = 0
             ref = i         #update the reference to the previous value
         
-        avg = sum(abs(x) for x in peaks)/float(len(peaks))  #average the abs() values of the peaks
+        if ((len(peaks)) != 0):
+            avg = sum(abs(x) for x in peaks)/float(len(peaks)) 	#average the abs() values of the peaks
+        else:
+            avg = 0
+            
         #print "AVERAGE:", avg
         if not self.gotReference:
             self.referenceAmplitude = avg                   #store the reference
@@ -151,8 +155,8 @@ phase_mod = phaseModule()
 
 
 #create new text file
-with open('./out/phase_change.txt', 'w') as f:
-    f.write('OUTPUT\n')
+#with open('./out/phase_change.txt', 'w') as f:
+#    f.write('OUTPUT\n')
 
 iterations = 0
 next_phase = 0 #initially set to 0
@@ -178,7 +182,7 @@ try:
             f.write(str(mag) + '\n')
 
 
-        if iterations > 200: #set iteration cap
+        if iterations > 20: #set iteration cap
             break
 
         #print "Magnitude:" + str(mag) + " Next Phase:" + str(next_phase)
