@@ -77,7 +77,7 @@ TARGET_MUL = 0.7
 TEST_MUL = 0.2
 
 s = Server(nchnls=2, duplex=1)
-s.recordOptions(filename='./output/out_audio.wav')
+s.recordOptions(filename='./output/test_case_3/speaker_audio.wav')
 s.setInputDevice(3)
 s.setOutputDevice(1)
 s.boot()
@@ -92,7 +92,11 @@ s.start()
 s.recstart()
 
 # feed input into a filter
-fil_inp = Biquadx(inp, freq=261, q=10, type=2, stages=10)
+fil_inp = Biquadx(inp, freq=261, q=10, type=2, stages=5)
+audio_rec = Record(fil_inp, filename="./output/test_case_3/filtered_input.wav", fileformat=0, sampletype=0)
+mic_rec = Record(inp, filename="./output/test_case_3/microphone_input.wav", fileformat=0, sampletype=0)
+
+
 ##########get the reference amplitude
 b.mul = 0 #turn off this speaker leaving just the reference one on
 time.sleep(1)
@@ -112,7 +116,7 @@ with open('./output/jawbone_test.txt', 'w') as f:
 a.mul = 0 #turn the reference speaker off
 b.mul = TEST_MUL
 
-max_iterations = 50
+max_iterations = 60
 #enter loop to equalize the amplitudes
 try:
     while True:
@@ -130,12 +134,16 @@ try:
         with open('./output/jawbone_test.txt', 'a') as f:
             f.write(str(float(test_amp_input)) + '\n')
 
-        time.sleep(0.5) #sleep for 500ms (JAWBONE has more delay than usual)
+        time.sleep(0.1) #sleep for 500ms (JAWBONE has more delay than usual)
         max_iterations = max_iterations - 1
         if max_iterations == 0:
+            audio_rec.stop()
+            mic_rec.stop()
             s.recstop()
             break
         
 except KeyboardInterrupt:
     s.recstop()
+    audio_rec.stop()
+    mic_rec.stop()
     s.stop()
