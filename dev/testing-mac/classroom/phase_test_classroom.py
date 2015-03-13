@@ -7,6 +7,7 @@
 from pyo import *
 import time
 from incds_amplitude_module import amplitudeModule
+from incds_phase_module import phaseModule
 import csv
 
 OUTPUT_FOLDER = './output/3.3.0/'
@@ -41,6 +42,8 @@ s.recstart()
 start_time = time.time()
 
 
+phase_mod = phaseModule()
+
 ##########get the reference amplitude
 b.mul = 0 #turn off this speaker leaving just the reference one on
 time.sleep(1)
@@ -58,7 +61,7 @@ ref_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
 a.mul = 0 #turn the reference speaker off
 b.mul = TEST_MUL
 
-
+time.sleep(0.5)
 
 
 #enter loop to equalize the amplitudes
@@ -75,18 +78,47 @@ try:
         test_amp = amp_mod.amplitudeEqualizer()
 
         #exit condition:
-        if (float(amp_mod.referenceAmplitude - test_amp_input) < 0.01):
+        if (float(amp_mod.referenceAmplitude - test_amp_input) < float(0.0010000)):
+            print "Amplitude Equalized"
+            print "B: Amplitude" + str(test_amp)
             break
 
         b.mul = test_amp
+        time.sleep(0.1) #sleep for 500ms (JAWBONE has more delay than usual)     
 
-        time.sleep(0.1) #sleep for 500ms (JAWBONE has more delay than usual)
+    a.mul = TARGET_MUL
+    print "Proceeding to Phase test"
 
-print "Broke!"
+    time.sleep(0.5)
+
+    with open(OUTPUT_FOLDER+'results.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(['Time', 'Phase', 'Amplitude'])
+
+    i = 360
+    while True:
+        DATA_TABLE = NewTable(length=0.1, chnls=1)
+        rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
+        time.sleep(0.15)
+        input_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+        nx_phase = phase_mod.phaseChange(input_amp)
+        new_phase = float(nx_phase)/float(360)
+        b.setPhase(new_phase)
+        print new_phase
+
+        with open(OUTPUT_FOLDER+'results.csv', 'a') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow([time.time()-start_time, nx_phase, input_amp])
         
-#with open(OUTPUT_FOLDER+'results.csv', 'w') as csvfile:
-#    writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-#    writer.writerow(['Time', 'Amplitude', 'Reference Val', 'Change Val'])
+        i = i - 1
+        if (i == 0):
+            audio_rec.stop()
+            mic_rec.stop()
+            s.recstop()
+            s.stop()
+            break
+
+        time.sleep(0.2)
 
 except KeyboardInterrupt:
     s.recstop()

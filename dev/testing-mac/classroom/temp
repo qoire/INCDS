@@ -1,0 +1,22 @@
+    i = 30
+    while True:
+        DATA_TABLE = NewTable(length=0.1, chnls=1)
+        rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
+        time.sleep(0.15)
+        input_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+        nx_phase = phase_mod.phaseChange(input_amp)
+        b.setPhase(nx_phase/360)
+
+        with open(OUTPUT_FOLDER+'results.csv', 'a') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow([time.time()-start_time, nx_phase, input_amp])
+        
+        i = i - 1
+        if (i == 0):
+            audio_rec.stop()
+            mic_rec.stop()
+            s.recstop()
+            s.stop()
+            break
+
+        time.sleep(1)
