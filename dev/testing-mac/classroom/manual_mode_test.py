@@ -63,6 +63,9 @@ b.mul = TEST_MUL
 
 time.sleep(0.5)
 
+with open(OUTPUT_FOLDER+'results.csv', 'w') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['Time', 'Phase', 'Amplitude'])
 
 #enter loop to equalize the amplitudes
 try:
@@ -86,18 +89,29 @@ try:
         b.mul = test_amp
         time.sleep(0.1) #sleep for 500ms (JAWBONE has more delay than usual)     
 
-        change_phase = float(0)
-        
-        while True:
-            DATA_TABLE = NewTable(length=0.1,chnls=1)
-            rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
-            time.sleep(0.15)
-            test_amp_input = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+    change_phase = float(0)    
+    a.mul = TARGET_MUL
 
-            
+    while True:
+        DATA_TABLE = NewTable(length=0.1,chnls=1)
+        rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
+        time.sleep(0.15)
+        test_amp_input = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+
         with open(OUTPUT_FOLDER+'results.csv', 'a') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow([time.time()-start_time, nx_phase, input_amp])
+            writer.writerow([time.time()-start_time, change_phase, test_amp_input])
+        b.setPhase(float(change_phase)/float(360))
+
+        if (change_phase == 360):
+            s.recstop()
+            audio_rec.stop()
+            mic_rec.stop()
+            s.stop()
+
+        change_phase = change_phase + 1
+        time.sleep(0.1)
+
 
 except KeyboardInterrupt:
     s.recstop()
