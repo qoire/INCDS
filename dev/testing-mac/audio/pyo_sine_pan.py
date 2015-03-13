@@ -1,10 +1,10 @@
 from pyo import *
 
-s = Server(audio="jack", nchnls=2).boot()
+s = Server(nchnls=2).boot()
 s.start()
 s.recstart()
 
-a = Sine(freq=261.6, mul=0.05)
+a = Sine(freq=450, mul=0.05)
 b = Sine(freq=261.6, mul=0.05)
 p = Pan(a, outs=2, pan=1, spread=0).out()
 p2 = Pan(a, outs=2, pan=0, spread=0).out()

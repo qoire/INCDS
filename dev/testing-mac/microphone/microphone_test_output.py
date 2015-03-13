@@ -6,7 +6,7 @@ s.setOutputDevice(1)
 s.boot()
 s.start()
 
-sine_out = Sine(freq=261, mul=0.2).out()
+sine_out = Sine(freq=261, mul=1).mix(2).out()
 
 try:
     while True:

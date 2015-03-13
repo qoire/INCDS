@@ -1,6 +1,6 @@
 from pyo import *
 
-s = Server(audio="jack", nchnls=2).boot()
+s = Server(nchnls=2).boot()
 s.start()
 s.recstart()
 

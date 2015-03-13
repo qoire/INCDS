@@ -2,6 +2,7 @@
 
 # FIRST LOOP = REFERENCE SINE WAVE (speaker A)
 # SUBSEQUENT LOOPS = ADJUSTED WAVE (speaker B)
+import csv
 
 from pyo import *
 
