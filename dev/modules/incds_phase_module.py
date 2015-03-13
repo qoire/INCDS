@@ -9,6 +9,7 @@ class phaseModule():
         self.prev_phase=None
         self.prev_mag=None
         self.is_phase_going_negative=None
+        self.loop_counter=0
         
 
     def setPhase(self, phase):
@@ -33,7 +34,7 @@ class phaseModule():
                 self.is_phase_going_negative=False
                 self.counter=self.counter+1
         else:
-            if cur_mag <= self.prev_mag+0.005:
+            if cur_mag <= self.prev_mag+0.003:
                 if self.is_phase_going_negative==True:
                     next_phase=self.prev_phase-self.increment
                     self.prev_mag=cur_mag
@@ -42,14 +43,26 @@ class phaseModule():
                     self.prev_mag=cur_mag
                 self.prev_phase=next_phase
             else:
-                self.increment=float(self.increment)/float(2)
-                self.prev_mag=cur_mag
-                if self.is_phase_going_negative==True:
-                    next_phase=self.prev_phase+self.increment
+                self.loop_counter=self.loop_counter+1
+                if self.loop_counter==2:
+                    self.increment=float(self.increment)/float(2)
+                    self.prev_mag=cur_mag
+                    if self.is_phase_going_negative==True:
+                        next_phase=self.prev_phase+self.increment
+                    else:
+                        next_phase=self.prev_phase-self.increment
+                    self.is_phase_going_negative=not(self.is_phase_going_negative)
+                    self.prev_phase=next_phase
+                    self.loop_counter=0
                 else:
-                    next_phase=self.prev_phase-self.increment
-                self.is_phase_going_negative=not(self.is_phase_going_negative)
-                self.prev_phase=next_phase
+                    if self.is_phase_going_negative==True:
+                        next_phase=self.prev_phase-self.increment
+                        self.prev_mag=cur_mag
+                    else:
+                        next_phase=self.prev_phase+self.increment
+                        self.prev_mag=cur_mag
+                    self.prev_phase=next_phase
+
                 
         #main function that will contain the phase change algorithm
         print float(self.increment)
