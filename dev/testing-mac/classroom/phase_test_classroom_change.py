@@ -13,8 +13,6 @@ import csv
 OUTPUT_FOLDER = './output/3.4.1/'
 
 #setup csv writer
-
-
 TARGET_MUL = 0.6
 TEST_MUL = 0.6
 
