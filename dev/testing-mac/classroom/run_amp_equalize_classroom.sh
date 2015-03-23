@@ -1,2 +1,2 @@
 export PYTHONPATH=${PYTHONPATH}:../../modules/
-python phase_test_classroom.py
+python amp_equalize_classroom_3_1.py

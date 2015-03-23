@@ -23,8 +23,8 @@ s.recordOptions(filename=OUTPUT_FOLDER+'output_audio_speaker.wav')
 s.setInputDevice(2)
 s.setOutputDevice(1)
 s.boot()
-a = Sine(freq=800, mul=TARGET_MUL) #target amplitude (reference) will not change
-b = Sine(freq=800, mul=TEST_MUL)
+a = Sine(freq=450, mul=TARGET_MUL) #target amplitude (reference) will not change
+b = Sine(freq=450, mul=TEST_MUL)
 p = Pan(a, outs=2, pan=1, spread=0).out() #start both speakers
 p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
@@ -33,7 +33,7 @@ inp = Input(chnl=1, mul=1)
 s.start()
 
 # feed input into a filter
-fil_inp = Biquadx(inp, freq=800, q=5, type=2, stages=7)
+fil_inp = Biquadx(inp, freq=450, q=5, type=2, stages=5)
 audio_rec = Record(fil_inp, filename=OUTPUT_FOLDER+"input_mic_filter.wav", fileformat=0, sampletype=0)
 mic_rec = Record(inp, filename=OUTPUT_FOLDER+"input_mic_unfilter.wav", fileformat=0, sampletype=0)
 s.recstart()
@@ -61,7 +61,7 @@ ref_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
 a.mul = 0 #turn the reference speaker off
 b.mul = TEST_MUL
 
-time.sleep(0.5)
+time.sleep(1)
 
 
 #enter loop to equalize the amplitudes
@@ -95,7 +95,7 @@ try:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['Time', 'Phase', 'Amplitude'])
 
-    i = 100
+    i = 300
     while True:
         DATA_TABLE = NewTable(length=0.1, chnls=1)
         rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()

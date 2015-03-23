@@ -34,7 +34,7 @@ class phaseModule():
                 self.is_phase_going_negative=False
                 self.counter=self.counter+1
         else:
-            if cur_mag <= self.prev_mag+0.003:
+            if cur_mag <= self.prev_mag+0.005:
                 if self.is_phase_going_negative==True:
                     next_phase=self.prev_phase-self.increment
                     self.prev_mag=cur_mag
