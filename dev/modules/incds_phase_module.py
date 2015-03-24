@@ -16,7 +16,11 @@ class phaseModule():
         self.current_phase = phase
 
     def phaseChange(self, cur_mag):
-        if self.counter==0:
+        if self.counter==60:
+            self.counter=0
+            next_phase=0
+            self.increment=float(30)
+        elif self.counter==0:
             next_phase=5
             self.ini_mag=cur_mag
             self.counter=self.counter+1
@@ -34,7 +38,7 @@ class phaseModule():
                 self.is_phase_going_negative=False
                 self.counter=self.counter+1
         else:
-            if cur_mag <= self.prev_mag+0.005:
+            if cur_mag <= self.prev_mag+0.05:
                 if self.is_phase_going_negative==True:
                     next_phase=self.prev_phase-self.increment
                     self.prev_mag=cur_mag
@@ -42,6 +46,7 @@ class phaseModule():
                     next_phase=self.prev_phase+self.increment
                     self.prev_mag=cur_mag
                 self.prev_phase=next_phase
+                self.counter=self.counter+1 #newly added
             else:
                 self.loop_counter=self.loop_counter+1
                 if self.loop_counter==2:
@@ -54,6 +59,7 @@ class phaseModule():
                     self.is_phase_going_negative=not(self.is_phase_going_negative)
                     self.prev_phase=next_phase
                     self.loop_counter=0
+                    self.counter=self.counter+1 #newly added
                 else:
                     if self.is_phase_going_negative==True:
                         next_phase=self.prev_phase-self.increment
@@ -62,6 +68,7 @@ class phaseModule():
                         next_phase=self.prev_phase+self.increment
                         self.prev_mag=cur_mag
                     self.prev_phase=next_phase
+                    self.counter=self.counter+1 #newly added
 
                 
         #main function that will contain the phase change algorithm

@@ -10,19 +10,25 @@ from incds_amplitude_module import amplitudeModule
 from incds_phase_module import phaseModule
 import csv
 
-OUTPUT_FOLDER = './output/3.4.1/'
-
+OUTPUT_FOLDER = './output/3.4.2/'
+#define the shift function
+def list_shifting(amplitude_list,new_amplitude):
+    amplitude_list[0] = amplitude_list[1]
+    amplitude_list[1] = amplitude_list[2]
+    amplitude_list[2] = new_amplitude
+    return(amplitude_list)
+    
 #setup csv writer
 TARGET_MUL = 0.7
-TEST_MUL = 0.1
+TEST_MUL = 0.7
 
 s = Server(nchnls=2, duplex=1)
 s.recordOptions(filename=OUTPUT_FOLDER+'output_audio_speaker.wav')
 s.setInputDevice(2)
 s.setOutputDevice(1)
 s.boot()
-a = Sine(freq=261, mul=TARGET_MUL) #target amplitude (reference) will not change
-b = Sine(freq=261, mul=TEST_MUL)
+a = Sine(freq=850, mul=TARGET_MUL) #target amplitude (reference) will not change
+b = Sine(freq=850, mul=TEST_MUL)
 p = Pan(a, outs=2, pan=1, spread=0).out() #start both speakers
 p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
@@ -31,7 +37,7 @@ inp = Input(chnl=1, mul=1)
 s.start()
 
 # feed input into a filter
-fil_inp = Biquadx(inp, freq=261, q=5, type=2, stages=7)
+fil_inp = Biquadx(inp, freq=850, q=5, type=2, stages=7)
 audio_rec = Record(fil_inp, filename=OUTPUT_FOLDER+"input_mic_filter.wav", fileformat=0, sampletype=0)
 mic_rec = Record(inp, filename=OUTPUT_FOLDER+"input_mic_unfilter.wav", fileformat=0, sampletype=0)
 s.recstart()
@@ -48,7 +54,7 @@ time.sleep(1)
     
 DATA_TABLE = NewTable(length=0.1,chnls=1)
 rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
-time.sleep(0.15)
+time.sleep(0.45) #from 0.15 to 0.45
 
 # instantiate your amplitudeModule module
 amp_mod = amplitudeModule()
@@ -64,6 +70,7 @@ time.sleep(1)
 
 #enter loop to equalize the amplitudes
 try:
+    avg_amp_list = [0, 0, 0]
     while True:
         #record new values!
         DATA_TABLE = NewTable(length=0.1,chnls=1)
@@ -74,7 +81,7 @@ try:
         #change the amplitude to a new one (adjust)
         test_amp_input = amp_mod.averageAmplitude(DATA_TABLE.getTable())
         test_amp = amp_mod.amplitudeEqualizer()
-
+        avg_amp_list=list_shifting(avg_amp_list,test_amp_input)
         #exit condition:
         if (float(amp_mod.referenceAmplitude - test_amp_input) < float(0.0010000)):
             print "Amplitude Equalized"
@@ -93,11 +100,16 @@ try:
         writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         writer.writerow(['Time', 'Phase', 'Amplitude'])
 
+    
+    avg_last_three= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(60)
     while True:
         DATA_TABLE = NewTable(length=0.1, chnls=1)
         rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
-        time.sleep(0.15)
+        time.sleep(0.35) #change sleep time
         input_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+        if (input_amp < avg_last_three):
+            time.sleep(2)
+            break
         nx_phase = phase_mod.phaseChange(input_amp)
         new_phase = float(nx_phase)/float(360)
         b.setPhase(new_phase)
@@ -107,11 +119,10 @@ try:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow([time.time()-start_time, nx_phase, input_amp])
 
-
-        if (input_amp < 0.01):
-            time.sleep(2)
-            break
-        time.sleep(0.2)
+ 
+        print "desire magnitude is" + str(avg_last_three)
+        
+        time.sleep(0.4)  #change sleep time
 
     phase_mod_180 = phaseModule()
     loop_counter1=0;
