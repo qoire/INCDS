@@ -68,18 +68,19 @@ try:
         # Auto mode implemented
         if in_dict[_AUTO]:
             if not auto_started:
-                auto_thread = incds_mode.INCDS(in_dict[_FREQ], fil_inp, a, b)
+                auto_thread = incds_mode.INCDS(in_dict[_MAG2], fil_inp, a, b)
                 auto_thread.start()
                 auto_started = True
         else:
             if auto_started:
                 auto_thread.signal = False
                 auto_started = False
+                global_var.switch_queue.clear()
 
             a.setFreq(in_dict[_FREQ])
             b.setFreq(in_dict[_FREQ])
             phase_float = float(in_dict[_PHASE])/360
-            b.setPhase(1 - phase_float)
+            b.setPhase(phase_float)
 
             # Set the magnitudes properly
             if in_dict[_MUTE1]:

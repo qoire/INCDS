@@ -2,32 +2,38 @@ import global_var
 import threading
 import subprocess
 import time
+from incds_amplitude_module import amplitudeModule
+from incds_phase_module import phaseModule
 from pyo import *
 
 class INCDS(threading.Thread):
-    def __init__(self, freq, fil_inp, A, B):
+    def __init__(self, input_mag, filtered_inp, inp_A, inp_B):
         threading.Thread.__init__(self)
         self.started = False
         self.signal = True
         self.freq = 850
-        self.fil_inp = fil_inp
-        self.a = speaker_A
-        self.b = speaker_B
+        self.fil_inp = filtered_inp
+        self.a = inp_A
+        self.b = inp_B
+        self.input_mag = input_mag
 
     def list_shifting(self, a_list, new_amplitude):
         # only works for lists with 3 indices
         a_list[0] = a_list[1]
         a_list[1] = a_list[2]
-        a_list[2] = a_list[3]
-        a_list[3] = new_amplitude
+        a_list[2] = new_amplitude
         return a_list
 
     def run(self):
-        TARGET_MUL = 0.7
-        TEST_MUL = 0.7
+        TARGET_MUL = self.input_mag/float(1000)
+        TEST_MUL = self.input_mag/float(1000)
         DIVIDE_MAGNITUDE = 60
 
         start_time = time.time()
+
+        # change phase
+        self.a.setFreq(self.freq)
+        self.b.setFreq(self.freq)
 
         # instantiate modules
         phase_mod = phaseModule()
@@ -37,7 +43,7 @@ class INCDS(threading.Thread):
 
         # setup data table
         DATA_TABLE = NewTable(length=0.1, chnls=1)
-        rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
+        rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
         time.sleep(0.45)
 
         amp_mod.setInitial(TEST_MUL)
@@ -52,13 +58,13 @@ class INCDS(threading.Thread):
         print "Amplitude Equalizer: Started"
         while self.signal:
             DATA_TABLE = NewTable(length=0.1, chnls=1)
-            rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
+            rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
             time.sleep(0.15)
 
             amp_mod.changeFloatList = DATA_TABLE.getTable()
             test_amp_input = amp_mod.averageAmplitude(DATA_TABLE.getTable())
             test_amp = amp_mod.amplitudeEqualizer()
-            avg_amp_list = list_shifting(avg_amp_list, test_amp_input)
+            avg_amp_list = self.list_shifting(avg_amp_list, test_amp_input)
 
             if (float(amp_mod.referenceAmplitude - test_amp_input) < float(0.0010000)):
                 print "Amplitude Equalizer: Finished"
@@ -67,14 +73,55 @@ class INCDS(threading.Thread):
             self.b.mul = test_amp
             time.sleep(0.1)
 
-        time.sleep(0.5)
-        avg_lt= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(DIVIDE_MAGNITUDE)
+        # Turn speaker A back on
+        self.a.mul = TARGET_MUL
 
+        time.sleep(0.4)
+        
+        avg_lt= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(DIVIDE_MAGNITUDE)
+        print "Phase Module: Started"
         while self.signal:
             DATA_TABLE = NewTable(length=0.1, chnls=1)
-            rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()
-            time.sleep(0.15)
+            rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
+            time.sleep(0.35)
 
+            input_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+            if (input_amp < avg_lt):
+                time.sleep(2)
+                print "Phase Module: Finished"
+                break
+
+            nx_phase = phase_mod.phaseChange(input_amp)
+            new_phase = float(nx_phase)/float(360)
+            self.b.setPhase(new_phase)
+ 
+            print "Phase Module: Desired Amplitude: " + str(avg_lt)
+        
+        time.sleep(0.4)  #change sleep time
+
+        out_phase = nx_phase
+        phase_mod_180 = None
+        loop_set = 0
+        while self.signal:
+            # Get data from queue
+            in_dict = global_var.switch_queue.get()
+            DATA_TABLE = NewTable(length=0.1, chnls=1)
+            rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
+            time.sleep(0.15)
+            test_recieve_amp = amp_mod.averageAmplitude(DATA_TABLE.getTable())
+
+            if not in_dict['switch']:
+                phase_mod_180 = float(nx_phase) + float(180)
+                if phase_mod_180>360:
+                    phase_mod_180=phase_mod_180%360
+                out_phase = float(phase_mod_180)/float(360)
+                self.b.setPhase(out_phase)
+
+                print ("Phase Change: " + str(out_phase))
+            else:
+                out_phase = float(nx_phase)/float (360)
+                self.b.setPhase(out_phase)
+                print ("Phase Change: " + str(out_phase))
             
 
 

@@ -25,12 +25,12 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
         # response handling
         try:
             client_input = json.loads(data)
-            check_list = ['freq', 'phase', 'auto', 'debug', 'mag1', 'mag2', 'mute1', 'mute2', 'shutdown']
+            check_list = ['freq', 'phase', 'auto', 'debug', 'mag1', 'mag2', 'mute1', 'mute2', 'shutdown', 'switch']
 
             for item in check_list:
                 if item not in check_list:
+                    print "Network Handler: JSON failed unspecified element"
                     correct = False
-
 
             # check that json is correct
             if not (correct):
@@ -39,12 +39,12 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
             print 'Decoding JSON has failed'
             client_input = global_var.old_hash
 
-
         response = "ok\n"
         self.request.sendall(response)
 
         # handling each variable individually
         global_var.network_queue.put(client_input)
+        global_var.switch_queue.put(client_input)
 
         # replace old hash with current hash
         global_var.old_hash = client_input
