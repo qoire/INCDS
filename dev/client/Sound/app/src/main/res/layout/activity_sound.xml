@@ -16,7 +16,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:indeterminate="false"
-        android:max="350" />
+        android:max="450" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -56,9 +56,9 @@
         android:layout_height="wrap_content"
         android:text="debug"
         android:id="@+id/debug_button"
-        android:layout_above="@+id/btnStop"
-        android:layout_alignRight="@+id/switchAuto"
-        android:layout_alignEnd="@+id/switchAuto" />
+        android:layout_above="@+id/switchAuto"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -66,10 +66,12 @@
         android:text="Auto"
         android:id="@+id/switchAuto"
         android:checked="false"
+        android:layout_marginBottom="86dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="51dp" />
+        android:layout_alignLeft="@+id/debug_button"
+        android:layout_alignStart="@+id/debug_button"
+        android:layout_alignRight="@+id/debug_button"
+        android:layout_alignEnd="@+id/debug_button" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -77,19 +79,10 @@
         android:id="@+id/ipAddr"
         android:layout_alignBottom="@+id/debug_button"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="false"
         android:layout_toLeftOf="@+id/debug_button"
         android:layout_toStartOf="@+id/debug_button"
         android:text="127.0.0.1" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="shutdown"
-        android:id="@+id/btnStop"
-        android:layout_alignBottom="@+id/switchAuto"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -152,5 +145,16 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:checked="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/switchToggle"
+        android:layout_below="@+id/m2bar"
+        android:layout_alignRight="@+id/m2Toggle"
+        android:layout_alignEnd="@+id/m2Toggle"
+        android:textOn="Constructive"
+        android:textOff="Destructive" />
 
 </RelativeLayout>

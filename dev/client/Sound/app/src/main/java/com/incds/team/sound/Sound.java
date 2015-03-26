@@ -44,6 +44,7 @@ class SharedData {
     public int debug_mode;
     public int auto_mode;
     public int shutdown;
+    public int nswitch;
 
 
     //necessary for function
@@ -82,7 +83,7 @@ public class Sound extends ActionBarActivity {
         Button dbgButton = (Button) findViewById(R.id.debug_button);
         ToggleButton m1Toggle = (ToggleButton) findViewById(R.id.m1Toggle);
         ToggleButton m2Toggle = (ToggleButton) findViewById(R.id.m2Toggle);
-        Button shutDownButton = (Button) findViewById(R.id.btnStop);
+        ToggleButton switchToggle = (ToggleButton) findViewById(R.id.switchToggle);
 
         //static
         final EditText ipAddr = (EditText) findViewById(R.id.ipAddr);
@@ -106,6 +107,7 @@ public class Sound extends ActionBarActivity {
             SharedData.globalInstance.s_port = 9999;
             SharedData.globalInstance.new_in = false;
             SharedData.globalInstance.connected = false;
+            SharedData.globalInstance.nswitch = 0;
         }
 
         //create thread for handling
@@ -159,15 +161,6 @@ public class Sound extends ActionBarActivity {
                 synchronized (SharedData.globalInstance) {
                     SharedData.globalInstance.debug_mode = 1;
                     SharedData.globalInstance.s_address = ipAddr.getText().toString();
-                    SharedData.globalInstance.new_in = true;
-                }
-            }
-        });
-
-        shutDownButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                synchronized (SharedData.globalInstance) {
-                    SharedData.globalInstance.shutdown = 1;
                     SharedData.globalInstance.new_in = true;
                 }
             }
@@ -233,7 +226,7 @@ public class Sound extends ActionBarActivity {
             TextView freqtext = (TextView) findViewById(R.id.textFrequency);
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int hertz = progress + 200;
+                int hertz = progress + 400;
                 freqtext.setText(""+hertz+" Hz");
 
                 synchronized (SharedData.globalInstance) {
@@ -273,13 +266,13 @@ public class Sound extends ActionBarActivity {
                 if (isChecked) {
                     // The toggle is enabled
                     synchronized (SharedData.globalInstance) {
-                        SharedData.globalInstance.mute_m1 = 1;
+                        SharedData.globalInstance.mute_m1 = 0;
                         SharedData.globalInstance.new_in = true;
                     }
                 } else {
                     // The toggle is disabled
                     synchronized (SharedData.globalInstance) {
-                        SharedData.globalInstance.mute_m1 = 0;
+                        SharedData.globalInstance.mute_m1 = 1;
                         SharedData.globalInstance.new_in = true;
                     }
                 }
@@ -291,13 +284,29 @@ public class Sound extends ActionBarActivity {
                 if (isChecked) {
                     // The toggle is enabled
                     synchronized (SharedData.globalInstance) {
-                        SharedData.globalInstance.mute_m2 = 1;
+                        SharedData.globalInstance.mute_m2 = 0;
                         SharedData.globalInstance.new_in = true;
                     }
                 } else {
                     // The toggle is disabled
                     synchronized (SharedData.globalInstance) {
-                        SharedData.globalInstance.mute_m2 = 0;
+                        SharedData.globalInstance.mute_m2 = 1;
+                        SharedData.globalInstance.new_in = true;
+                    }
+                }
+            }
+        });
+
+        switchToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    synchronized (SharedData.globalInstance) {
+                        SharedData.globalInstance.nswitch = 1;
+                        SharedData.globalInstance.new_in = true;
+                    }
+                } else {
+                    synchronized (SharedData.globalInstance) {
+                        SharedData.globalInstance.nswitch = 0;
                         SharedData.globalInstance.new_in = true;
                     }
                 }
@@ -347,6 +356,7 @@ public class Sound extends ActionBarActivity {
             int r_mag2;
             int r_mute1;
             int r_mute2;
+            int r_switch;
             int shutdown;
             int dbgMode;
 
@@ -358,6 +368,7 @@ public class Sound extends ActionBarActivity {
                 r_mag2 = SharedData.globalInstance.user_m2;
                 r_mute1 = SharedData.globalInstance.mute_m1;
                 r_mute2 = SharedData.globalInstance.mute_m2;
+                r_switch = SharedData.globalInstance.nswitch;
                 shutdown = SharedData.globalInstance.shutdown;
                 dbgMode = SharedData.globalInstance.debug_mode;
 
@@ -377,6 +388,7 @@ public class Sound extends ActionBarActivity {
                 message.put("mute1", r_mute1);
                 message.put("mute2", r_mute2);
                 message.put("shutdown", shutdown);
+                message.put("switch", r_switch);
             } catch(JSONException e) {
                 e.printStackTrace();
             }
