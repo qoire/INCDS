@@ -20,24 +20,30 @@ _MAG1 = 'mag1'
 _MAG2 = 'mag2'
 _MUTE1 = 'mute1'
 _MUTE2 = 'mute2'
+_RESET = 'reset'
+_SWITCH = 'switch'
 
-# wave location
-WAVE_LOCATION = "./output/temp.wav"
-
-# create new functions to detect devices
-
-#MAIN
+# Initialization
 s = Server(nchnls=2, duplex=1).boot()
-s.start()
+s.setVerbosity(1)
+
+# Setup outputs
 a = Sine(freq=261, mul=0.5)
-b = Sine(freq=261, mul=0)
+b = Sine(freq=261, mul=0.5)
 p = Pan(a, outs=2, pan=1, spread=0).out()
 p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
-#debug mode
+# Setup Inputs
+inp = Input(chnl=1,mul=1)
+s.start()
+
+# Filtered input
+fil_inp = Biquadx(inp, freq=261, q=5, type=2, stages=7)
+
+# Debug mode setup
 debug_sine=Sine(freq=5,mul=20)
 
-#set up server
+# Server setup
 HOST, PORT = '', 9999
 network_handler.startInterfaceServer(HOST, PORT)
 
@@ -52,31 +58,20 @@ try:
             a.mul=0
             time.sleep(5)
             
-            #set back to sine
+            # Set back to sine
             b.setFreq(global_var.user_freq)
             a.mul=0.3
 
-            #change debug mode to false
+            # Change debug mode to false
             in_dict[_DEBUG] = 0
 
         # Auto mode implemented
         if in_dict[_AUTO]:
-            #Automode steps:
-            #   1.Accept input from microphone
-            #   2.Run through DFT
-            #   3.Examine output in table format
-            #   4.Take Average
-            #   5.Determine best course of action
             if not auto_started:
-                auto_thread = incds_mode.INCDS(WAVE_LOCATION, in_dict[_FREQ])
+                auto_thread = incds_mode.INCDS(in_dict[_FREQ], fil_inp, a, b)
                 auto_thread.start()
                 auto_started = True
         else:
-            # MANUAL MODE
-            #   1. Get instructions from queue
-            #   2. Execute
-            #   3. Tell queue it's done
-
             if auto_started:
                 auto_thread.signal = False
                 auto_started = False
@@ -86,7 +81,7 @@ try:
             phase_float = float(in_dict[_PHASE])/360
             b.setPhase(1 - phase_float)
 
-            # set the magnitudes properly
+            # Set the magnitudes properly
             if in_dict[_MUTE1]:
                 a.mul = 0
             else:
@@ -100,8 +95,8 @@ try:
         if in_dict[_SHUTDOWN]:
             raise KeyboardInterrupt
 
-        # finish task
-        #global_var.network_queue.task_done()
+        # Finish task
+        # global_var.network_queue.task_done()
 except KeyboardInterrupt:
     s.stop()
     
