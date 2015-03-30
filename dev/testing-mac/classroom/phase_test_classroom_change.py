@@ -19,8 +19,8 @@ def list_shifting(amplitude_list,new_amplitude):
     return(amplitude_list)
     
 #setup csv writer
-TARGET_MUL = 0.7
-TEST_MUL = 0.7
+TARGET_MUL = 0.5
+TEST_MUL = 0.5
 
 s = Server(nchnls=2, duplex=1)
 s.recordOptions(filename=OUTPUT_FOLDER+'output_audio_speaker.wav')
@@ -83,7 +83,7 @@ try:
         test_amp = amp_mod.amplitudeEqualizer()
         avg_amp_list=list_shifting(avg_amp_list,test_amp_input)
         #exit condition:
-        if (float(amp_mod.referenceAmplitude - test_amp_input) < float(0.0010000)):
+        if (abs(float(amp_mod.referenceAmplitude - test_amp_input)) < float(0.010000)):
             print "Amplitude Equalized"
             print "B: Amplitude" + str(test_amp)
             break
@@ -101,7 +101,7 @@ try:
         writer.writerow(['Time', 'Phase', 'Amplitude'])
 
     
-    avg_last_three= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(60)
+    avg_last_three= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(20)
     while True:
         DATA_TABLE = NewTable(length=0.1, chnls=1)
         rec = TableRec(fil_inp, table=DATA_TABLE, fadetime=0).play()

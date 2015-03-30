@@ -24,10 +24,13 @@ _RESET = 'reset'
 _SWITCH = 'switch'
 
 # Initialization
-s = Server(nchnls=2, duplex=1).boot()
+s = Server(nchnls=2, duplex=1)
+s.setOutputDevice(1)
+s.setInputDevice(2)
+s.boot()
 s.setVerbosity(1)
 
-# Setup outputs
+# Setup output
 a = Sine(freq=261, mul=0.5)
 b = Sine(freq=261, mul=0.5)
 p = Pan(a, outs=2, pan=1, spread=0).out()
@@ -38,7 +41,7 @@ inp = Input(chnl=1,mul=1)
 s.start()
 
 # Filtered input
-fil_inp = Biquadx(inp, freq=261, q=5, type=2, stages=7)
+fil_inp = Biquadx(inp, freq=650, q=5, type=2, stages=7)
 
 # Debug mode setup
 debug_sine=Sine(freq=5,mul=20)
@@ -68,14 +71,13 @@ try:
         # Auto mode implemented
         if in_dict[_AUTO]:
             if not auto_started:
-                auto_thread = incds_mode.INCDS(in_dict[_MAG2], fil_inp, a, b)
+                auto_thread = incds_mode.INCDS(in_dict[_FREQ], in_dict[_MAG2], fil_inp, a, b)
                 auto_thread.start()
                 auto_started = True
         else:
             if auto_started:
                 auto_thread.signal = False
                 auto_started = False
-                global_var.switch_queue.clear()
 
             a.setFreq(in_dict[_FREQ])
             b.setFreq(in_dict[_FREQ])
