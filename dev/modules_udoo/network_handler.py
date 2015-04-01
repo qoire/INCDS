@@ -44,8 +44,6 @@ class ThreadedTCPRequestHandler(SocketServer.StreamRequestHandler):
 
         # handling each variable individually
         global_var.network_queue.put(client_input)
-        global_var.switch_queue.put(client_input)
-
         # replace old hash with current hash
         global_var.old_hash = client_input
 

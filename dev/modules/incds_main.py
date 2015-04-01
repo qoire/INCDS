@@ -26,7 +26,7 @@ _SWITCH = 'switch'
 # Initialization
 s = Server(nchnls=2, duplex=1)
 s.setOutputDevice(1)
-s.setInputDevice(2)
+s.setInputDevice(0)
 s.boot()
 s.setVerbosity(1)
 
@@ -54,6 +54,7 @@ auto_started = False
 
 try:
     while True:
+        
         in_dict = global_var.network_queue.get()
 
         if in_dict[_DEBUG]:
@@ -69,12 +70,12 @@ try:
             in_dict[_DEBUG] = 0
 
         # Auto mode implemented
-        if in_dict[_AUTO]:
+        if (in_dict[_AUTO] == 1):
             if not auto_started:
                 auto_thread = incds_mode.INCDS(in_dict[_FREQ], in_dict[_MAG2], fil_inp, a, b)
                 auto_thread.start()
                 auto_started = True
-        else:
+        elif (in_dict[_AUTO] == 0):
             if auto_started:
                 auto_thread.signal = False
                 auto_started = False

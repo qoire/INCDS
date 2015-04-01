@@ -59,6 +59,18 @@ class INCDS(threading.Thread):
 
         print "Amplitude Equalizer: Started"
         while self.signal:
+            # Check for pause
+            if not global_var.switch_queue.empty():
+                temp_dict = global_var.switch_queue.get()
+                print "INCDS_MODE: Retrieved Queue Data"
+                if (temp_dict['auto'] == 2):
+                    print "Automode: Paused"
+                    while True:
+                        new_temp_dict = global_var.switch_queue.get(True)
+                        if (new_temp_dict['auto'] == 0):
+                            break
+
+            # Normal operation
             DATA_TABLE = NewTable(length=0.1, chnls=1)
             rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
             time.sleep(0.15)
@@ -86,6 +98,17 @@ class INCDS(threading.Thread):
         avg_lt= (float(avg_amp_list[0])+float(avg_amp_list[1])+float(avg_amp_list[2]))/float(DIVIDE_MAGNITUDE)
         print "Phase Module: Started"
         while self.signal:
+            if not global_var.switch_queue.empty():
+                temp_dict = global_var.switch_queue.get()
+                print "INCDS_MODE: Retrieved Queue Data"
+                if (temp_dict['auto'] == 2):
+                    print "Automode: Paused"
+                    while True:
+                        new_temp_dict = global_var.switch_queue.get(True)
+                        if (new_temp_dict['auto'] == 0):
+                            break
+
+            # Normal operation
             DATA_TABLE = NewTable(length=0.1, chnls=1)
             rec = TableRec(self.fil_inp, table=DATA_TABLE, fadetime=0).play()
             time.sleep(0.35)

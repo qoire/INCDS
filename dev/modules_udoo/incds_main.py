@@ -24,9 +24,8 @@ _RESET = 'reset'
 _SWITCH = 'switch'
 
 # Initialization
-s = Server(audio="jackd", nchnls=2, duplex=1)
+s = Server(audio="jack", nchnls=2, duplex=1)
 s.setOutputDevice(1)
-s.setInputDevice(2)
 s.boot()
 s.setVerbosity(1)
 
@@ -35,13 +34,7 @@ a = Sine(freq=261, mul=0.5)
 b = Sine(freq=261, mul=0.5)
 p = Pan(a, outs=2, pan=1, spread=0).out()
 p2 = Pan(b, outs=2, pan=0, spread=0).out()
-
-# Setup Inputs
-inp = Input(chnl=1,mul=1)
 s.start()
-
-# Filtered input
-fil_inp = Biquadx(inp, freq=650, q=5, type=2, stages=7)
 
 # Debug mode setup
 debug_sine=Sine(freq=5,mul=20)
@@ -69,10 +62,10 @@ try:
             in_dict[_DEBUG] = 0
 
         # Auto mode implemented
-        if in_dict[_AUTO]:
-            if not auto_started:
-        else:
-            if auto_started:
+        if (in_dict[_AUTO] == 1):
+            pass
+        elif (in_dict[_AUTO] == 0):
+
 
             a.setFreq(in_dict[_FREQ])
             b.setFreq(in_dict[_FREQ])
