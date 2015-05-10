@@ -26,7 +26,7 @@ _SWITCH = 'switch'
 # Initialization
 s = Server(nchnls=2, duplex=1)
 s.setOutputDevice(1)
-s.setInputDevice(0)
+s.setInputDevice(3)
 s.boot()
 s.setVerbosity(1)
 
@@ -37,7 +37,7 @@ p = Pan(a, outs=2, pan=1, spread=0).out()
 p2 = Pan(b, outs=2, pan=0, spread=0).out()
 
 # Setup Inputs
-inp = Input(chnl=1,mul=1)
+inp = Input(chnl=0,mul=1)
 s.start()
 
 # Filtered input

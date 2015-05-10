@@ -27,7 +27,7 @@ class INCDS(threading.Thread):
     def run(self):
         TARGET_MUL = self.input_mag/float(1000)
         TEST_MUL = self.input_mag/float(1000)
-        DIVIDE_MAGNITUDE = 30
+        DIVIDE_MAGNITUDE = 20
 
         start_time = time.time()
 

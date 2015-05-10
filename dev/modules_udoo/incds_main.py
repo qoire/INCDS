@@ -25,7 +25,6 @@ _SWITCH = 'switch'
 
 # Initialization
 s = Server(audio="jack", nchnls=2, duplex=1)
-s.setOutputDevice(1)
 s.boot()
 s.setVerbosity(1)
 
