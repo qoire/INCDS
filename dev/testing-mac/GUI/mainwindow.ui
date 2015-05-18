@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>780</width>
-    <height>539</height>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,119 +15,21 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string>Axis</string>
+    <item row="2" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>X-Axis</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="xspinBoxLower"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="xspinBoxUpper"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Y-Axis</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="yspinBoxLower"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="yspinBoxUpper"/>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QPushButton" name="btnAdjustAxis">
-         <property name="text">
-          <string>Adjust Axis</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="groupBox_3">
-      <property name="title">
-       <string>Line</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QComboBox" name="cBoxColor">
-         <item>
-          <property name="text">
-           <string>Color (Default)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Green</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Red</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Blue</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Magenta</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Yellow</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Brown</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QComboBox" name="cBoxStyle">
-         <item>
-          <property name="text">
-           <string>Style (Default)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Points</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dotted</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dash</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+    <item row="0" column="1" rowspan="3">
+     <widget class="PlotWidget" name="graphicsView"/>
     </item>
     <item row="3" column="0" colspan="2">
      <widget class="QGroupBox" name="groupBox">
@@ -214,21 +116,145 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Axis</string>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>X-Axis</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="xspinBoxLower"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="xspinBoxUpper"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Y-Axis</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="yspinBoxLower"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="yspinBoxUpper"/>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="btnAdjustAxis">
+         <property name="text">
+          <string>Adjust Axis</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QPushButton" name="btnResetAxis">
+         <property name="text">
+          <string>Reset Axis</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
-    <item row="0" column="1" rowspan="3">
-     <widget class="PlotWidget" name="graphicsView"/>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="title">
+       <string>Plot</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QComboBox" name="cBoxColor">
+         <item>
+          <property name="text">
+           <string>Color (Default)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Green</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Red</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blue</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Magenta</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Yellow</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Brown</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="cBoxStyle">
+         <item>
+          <property name="text">
+           <string>Style (Default)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Points</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dotted</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dash</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QComboBox" name="cBoxBackground">
+         <item>
+          <property name="text">
+           <string>Background (default)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Black</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>White</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -254,7 +280,15 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionFullscreen"/>
+    <addaction name="actionWindowed"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -279,6 +313,16 @@
   <action name="actionClose">
    <property name="text">
     <string>Close</string>
+   </property>
+  </action>
+  <action name="actionFullscreen">
+   <property name="text">
+    <string>Fullscreen</string>
+   </property>
+  </action>
+  <action name="actionWindowed">
+   <property name="text">
+    <string>Windowed</string>
    </property>
   </action>
  </widget>
