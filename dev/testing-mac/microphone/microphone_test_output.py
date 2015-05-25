@@ -1,20 +1,27 @@
 from pyo import *
+from multiprocess import BaseManager
 pa_list_devices()
 
+class QueueManager(BaseManager): pass
+QueueManager.register('get_queue')
+
 s = Server(nchnls=2, duplex=1)
-s.setOutputDevice(1)
-s.setInputDevice(2)
 s.boot()
 s.start()
 
-sine_out = Sine(freq=261, mul=1).mix(2).out()
 inp = Input(chnl=0, mul=1)
-out_rec = Record(sine_out, filename="output/output_sine.wav",fileformat=0, sampletype=0)
-audio_rec = Record(inp, filename="output/input_mic_unfiltered.wav", fileformat=0, sampletype=0)
+
+#Queue manager
+m = QueueManager(address=('', 49998), authkey='randgen')
+m.connect()
+queue = m.get_queue()
 
 try:
     while True:
-        time.sleep(1)
+        DATA_TABLE = NewTable(length=0.1,chnls=1)
+		rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
+		time.sleep(0.15)
+		queue.put(rec.getTable())
 except KeyboardInterrupt:
 	audio_rec.stop()
 	out_rec.stop()
