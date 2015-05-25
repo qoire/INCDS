@@ -31,7 +31,6 @@ gui_pid = guiproc.pid
 pid_list = [gui_pid, audio_pid, server_pid]
 
 def kill_child():
-	guiproc.kill()
 	audioproc.kill()
 	serverproc.kill()
 

@@ -2,6 +2,7 @@ import sys
 import mainwindow #our mainwindow containing definitions for GUI
 import multiprocessing
 import retrieverthread
+import numpy as np
 from PyQt4 import QtCore, QtGui, uic
 
 form_class = uic.loadUiType("mainwindow.ui")[0]
@@ -37,6 +38,9 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
         self.xspinBoxUpper.valueChanged.connect(self.xspinBoxUpper_changed)
         self.yspinBoxLower.valueChanged.connect(self.yspinBoxLower_changed)
         self.yspinBoxUpper.valueChanged.connect(self.yspinBoxUpper_changed)
+
+        # Connect custom signal from reciever thread
+        QtCore.QObject.connect(self.retthread, QtCore.SIGNAL("newData(PyQt_PyObject)"), self.recieverThreadHandler)
 
     def xspinBoxLower_changed(self):
         plot = self.graphicsView.getPlotItem()
@@ -83,20 +87,17 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
     def setPlotAmplitude(self):
         plot = self.graphicsView.getPlotItem()
         plot.showGrid(x=True, y=True)
-        plot.setXRange(0, 10)
-        plot.setYRange(0, 10)
+        plot.setXRange(0, 0.01)
+        plot.setYRange(-1, 1)
         plot.setLabel('bottom', 'Time')
         plot.setLabel('left', 'Amplitude')
+        self.curve = self.graphicsView.plot(np.linspace(0, 0, 100))
 
         # Updated spinboxes to match
         self.xspinBoxLower.setValue(self.x_lower)
         self.xspinBoxUpper.setValue(self.x_upper)
         self.yspinBoxLower.setValue(self.y_lower)
         self.yspinBoxUpper.setValue(self.y_upper)
-
-    def startRecieverThread(self):
-        self.retthread = retrieverthread.RetrieverThread(self.graphicsView)
-        self.retthread.start()
     
     def btnFullScreen_clicked(self):
         if (not self.isWindowFullScreen):
@@ -116,6 +117,15 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
 
     def btnResetAxis_clicked(self):
         plotItem = self.graphicsView.getPlotItem()
+
+# Thread handler section
+    def startRecieverThread(self):
+        self.retthread = retrieverthread.RetrieverThread(self.graphicsView)
+        self.retthread.start()
+
+    def recieverThreadHandler(self, npdata):
+        time_calc = np.linspace(0, 0.01, npdata.size)
+        self.curve.setData(x=time_calc, y=npdata)
 
 if __name__ == "__main__":
     # Implement thread for recieving information
