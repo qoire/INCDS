@@ -59,17 +59,17 @@
          </property>
          <item>
           <property name="text">
+           <string>Live Feed</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Phase</string>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Magnitude</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Magnitude (from speaker)</string>
           </property>
          </item>
         </widget>

@@ -2,6 +2,8 @@ from pyo import *
 from multiprocessing.managers import BaseManager
 pa_list_devices()
 
+#Instantiate BaseManager class for passing information using client
+#This is identical to BaseManager server
 class QueueManager(BaseManager): pass
 QueueManager.register('get_queue')
 
@@ -21,7 +23,12 @@ try:
         DATA_TABLE = NewTable(length=0.01,chnls=1)
         rec = TableRec(inp, table=DATA_TABLE, fadetime=0).play()
         time.sleep(0.015)
-        queue.put(DATA_TABLE.getTable())
+
+        #Output three possible formats to server
+        #1 - Live feed
+        a = {'state': "livefeed", 'data': DATA_TABLE.getTable()}
+
+        queue.put(a)
 except KeyboardInterrupt:
     out_rec.stop()
     s.stop()

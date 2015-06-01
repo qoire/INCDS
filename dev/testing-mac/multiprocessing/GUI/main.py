@@ -39,7 +39,7 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
         self.yspinBoxLower.valueChanged.connect(self.yspinBoxLower_changed)
         self.yspinBoxUpper.valueChanged.connect(self.yspinBoxUpper_changed)
 
-        # Connect custom signal from reciever thread
+        # Define custom reciever handlers
         QtCore.QObject.connect(self.retthread, QtCore.SIGNAL("newData(PyQt_PyObject)"), self.recieverThreadHandler)
 
     def xspinBoxLower_changed(self):
