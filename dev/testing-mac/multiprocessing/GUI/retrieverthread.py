@@ -22,8 +22,10 @@ class RetrieverThread(QtCore.QThread):
 				np_array = np.asarray(dat_list['data'])
 				self.emit(QtCore.SIGNAL("newData(PyQt_PyObject)"), np_array)
 			elif (dat_list['state'] == "phase"):
-				pass
-			elif (dat_list['state'] == "magnitude"):
-				pass
+				np_array = np.asarray(dat_list['data'])
+				self.emit(QtCore.SIGNAL("newPhaseData(PyQt_PyObject)"), np_array)
+			elif (dat_list['state'] == "amplitude"):
+				np_array = np.asarray(dat_list['data'])
+				self.emit(QtCore.SIGNAL("newAmplitudeData(PyQt_PyObject)"), np_array)
 
 

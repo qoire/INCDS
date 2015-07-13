@@ -13,6 +13,10 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
         self.isWindowFullScreen = False
         self.setupUi(self)
 
+        # Setup data variables
+        self.np_phase = []
+        self.np_amplitude = []
+
         # Setup shared variables
         self.x_lower = 0
         self.x_upper = 10
@@ -25,21 +29,29 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
 
         # Configure the plotview (graphicsView)
         self.setPlotAmplitude()
+        self.setCurves()
 
         # Start reciever thread
         self.startRecieverThread()
 
         # Define custom reciever handlers
         QtCore.QObject.connect(self.retthread, QtCore.SIGNAL("newData(PyQt_PyObject)"), self.recieverThreadHandler)
+        QtCore.QObject.connect(self.retthread, QtCore.SIGNAL("newPhaseData(PyQt_PyObject)"), self.recieverThreadPhaseHandler)
+        QtCore.QObject.connect(self.retthread, QtCore.SIGNAL("newAmplitudeData(PyQt_PyObject"), self.recieverThreadAmplitudeHandler)
+
 
     def setPlotAmplitude(self):
-        plot = self.graphicsView.getPlotItem()
+        plot = self.liveView.getPlotItem()
         plot.showGrid(x=True, y=True)
         plot.setXRange(0, 0.01)
         plot.setYRange(-0.5, 0.5)
         plot.setLabel('bottom', 'Time')
         plot.setLabel('left', 'Amplitude')
-        self.curve = self.graphicsView.plot(np.linspace(0, 0, 100))
+
+    def setCurves(self):
+        self.live_curve = self.liveView.plot(np.linspace(0, 0, 100))
+        self.phase_curve = self.phaseView.plot(np.linspace(0, 0, 100))
+        self.amplitude_curve = self.amplitudeView.plot(np.linspace(0, 0, 100))
 
     def actFullScreen_triggered(self):
         self.showFullScreen()
@@ -49,12 +61,20 @@ class MainWindowClass(QtGui.QMainWindow, form_class):
 
 # Thread handler section
     def startRecieverThread(self):
-        self.retthread = retrieverthread.RetrieverThread(self.graphicsView)
+        self.retthread = retrieverthread.RetrieverThread(self.liveView)
         self.retthread.start()
 
     def recieverThreadHandler(self, npdata):
         time_calc = np.linspace(0, 0.01, npdata.size)
-        self.curve.setData(x=time_calc, y=npdata)
+        self.live_curve.setData(x=time_calc, y=npdata)
+
+    def recieverThreadPhaseHandler(self, floatdata):
+        #self.np_phase.append(floatdata)
+        self.phase_curve.setData(floatdata)
+
+    def recieverThreadAmplitudeHandler(self, floatdata):
+        #self.np_phase.append(floatdata)
+        self.amplitude_curve.setData(floatdata)
 
 if __name__ == "__main__":
     # Implement thread for recieving information
@@ -64,4 +84,3 @@ if __name__ == "__main__":
     mainWindow = MainWindowClass()
     mainWindow.show()
     app.exec_()
-

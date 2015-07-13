@@ -1,5 +1,6 @@
 from pyo import *
 from multiprocessing.managers import BaseManager
+from random import randint
 pa_list_devices()
 
 #Instantiate BaseManager class for passing information using client
@@ -27,8 +28,18 @@ try:
         #Output three possible formats to server
         #1 - Live feed
         a = {'state': "livefeed", 'data': DATA_TABLE.getTable()}
-
         queue.put(a)
+
+        # Generate phase randomized
+        random_phase = randint(0,9)
+        a = {'state': "phase", 'data': random_phase}
+        queue.put(a)
+
+        # Generate amplitude randomized
+        random_amp = randint(0,9)
+        a = {'state': "amplitude", 'data': random_amp}
+        queue.put(a)
+
 except KeyboardInterrupt:
     out_rec.stop()
     s.stop()
